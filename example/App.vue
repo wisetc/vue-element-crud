@@ -1,6 +1,6 @@
 <template>
 <div>
-  <crud :data="data" :form="form" :rules="rules" :fields="mapItems" :inline="false"
+  <crud :data="data" :form="form" :rules="rules" :fields="mapItems" :inline="false" index
     :editing="editing" @open="handleOpen" @close="handleClose"
     @create="handleCreate" @update="handleUpdate" @destroy="handleDestroy" @submit="handleSubmit"/>
 
