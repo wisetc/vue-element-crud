@@ -1,6 +1,6 @@
 {
   "name": "vue-element-crud",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A CRUD component for vue projects to create, retrieve, update and destroy models.",
   "main": "dist/crud.common.js",
   "directories": {

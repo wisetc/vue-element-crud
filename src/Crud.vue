@@ -5,6 +5,7 @@
     </div>
     
     <el-table :data="data" stripe border>
+      <el-table-column v-if="index" type="index" width="60"></el-table-column>
       <template v-for="(key, index) in Object.keys(columns)">
         <el-table-column :key="index" v-if="(fields[key] || '').options" :label="columns[key]" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
           <template scope="scope">
@@ -68,7 +69,10 @@ export default {
     labelWidth: { default: '100px', type: String },
 
     // 表单的显示样式，如果为真，则是行内显示
-    inline: { default: true, type: Boolean },
+    inline: { default: false, type: Boolean },
+
+    // 是否显示表格的序号，如果为真，则显示表格的序号
+    index: { default: false, type: Boolean },
 
     // 表格与表单的字段不一致时，传入作为表格的表头
     table: { default: () => ({}), type: Object }
