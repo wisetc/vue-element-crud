@@ -17,7 +17,7 @@ $ npm run dev
 
 ### Step-1, init project
 
-You may need to init a vue project or take a ready one to continue as vue-loader or babel-loader or css-loader is required for element-ui.
+You may need to init a vue project or take a existing one to continue as vue-loader or babel-loader or css-loader is required for element-ui.
 
 ```bash
 $ vue init webpack <project-name>
@@ -25,7 +25,7 @@ $ vue init webpack <project-name>
 
 ### Step-2, install
 
-This component dependent on element-ui, you should first install and import element-ui to work.
+This component is dependent on element-ui, you should first install and then import element-ui to work.
 
 ```bash
 $ npm install -S element-ui vue-element-crud
@@ -46,9 +46,9 @@ Vue.use(CRUD)
 
 ### Step-4, refer to examples
 
-You can read the docs or examples to find out how to implement this vue-element-crud props and methods.
+You can read the docs or examples to find out how to implement props and methods of this vue-element-crud.
 
 ## Contribute
 
-If you have some thoughts on this projects, please don't hesitate to let us konw. You can make a new issue to make it better.
+If you have some ideas about this component, please don't hesitate to let us konw. You can make a new issue to make it better.
 
