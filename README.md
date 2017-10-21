@@ -1,10 +1,12 @@
 # vue-element-crud
 
-> A wrapped vue CRUD component based on the famous vue UI componets -- element-ui. [demo](https://cdn.rawgit.com/wisetc/vue-element-crud/ba84667b/index.html)
+> A wrapped vue CRUD component based on the famous vue UI componets -- element-ui. 
+
+Here is a simple [demo](https://rawgit.com/wisetc/vue-element-crud/master/index.html).
 
 ## Local development
 
-You can download or clone this project as long as you like it. Then run npm scripts
+You can download or clone this repository as long as you like it. Then you can run npm scripts
 
 ```bash
 $ npm install
@@ -15,7 +17,7 @@ $ npm run dev
 
 ### Step-1, init project
 
-You should init a vue project or take a ready one to continue as vue-loader plus babel-loader plus css-loader is required for element-ui.
+You may need to init a vue project or take a ready one to continue as vue-loader or babel-loader or css-loader is required for element-ui.
 
 ```bash
 $ vue init webpack <project-name>
@@ -29,7 +31,7 @@ This component dependent on element-ui, you should first install and import elem
 $ npm install -S element-ui vue-element-crud
 ```
 
-### Step-3, use
+### Step-3, vue use
 
 Add these lines below to your main.js
 
