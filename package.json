@@ -2,12 +2,15 @@
   "name": "vue-element-crud",
   "version": "1.0.0",
   "description": "A CRUD component for vue projects to create, retrieve, update and destroy models.",
-  "main": "dist/index.js",
+  "main": "dist/crud.common.js",
   "directories": {
-    "example": "examples"
+    "lib": "dist",
+    "example": "example"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "build:watch": "cross-env NODE_ENV=production webpack --progress --hide-modules -w"
   },
   "repository": {
     "type": "git",
@@ -15,12 +18,34 @@
   },
   "keywords": [
     "vue-crud",
-    "vue-element-crud"
+    "vue-element-crud",
+    "element-crud"
   ],
-  "author": "Mark Wang",
+  "author": {
+    "name": "Mark Wang",
+    "email": "zhi@uqugu.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/wisetc/vue-element-crud/issues"
   },
-  "homepage": "https://github.com/wisetc/vue-element-crud#readme"
+  "homepage": "https://github.com/wisetc/vue-element-crud#readme",
+  "dependencies": {
+    "element-ui": "^1.4.7",
+    "vue": "^2.4.4"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.7",
+    "file-loader": "^1.1.4",
+    "style-loader": "^0.19.0",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  }
 }
