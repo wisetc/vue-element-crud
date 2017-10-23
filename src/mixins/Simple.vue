@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import CRUD from '../../dist/crud.common'
+import CRUD from '../Crud.vue'
 export default {
   components: { crud: CRUD },
   data() {
