@@ -1,4 +1,5 @@
 import CRUD from './Crud.vue'
+import Simple from './mixins/Simple.vue'
 import fields from './fields'
 import report from './report'
 
@@ -17,5 +18,6 @@ export default {
 
 export {
   fields,
-  CRUD
+  CRUD,
+  Simple
 }

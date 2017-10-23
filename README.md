@@ -103,6 +103,16 @@ Your template may look like this.
     @create="handleCreate" @update="handleUpdate" @destroy="handleDestroy" @submit="handleSubmit"/>
 ```
 
+Here is a [simple mixin](src/mixins) that you can use to bootstrap. Just import `Simple`.
+
+```javascript
+import { Simple } from 'vue-element-crud'
+
+export {
+  mixins: [Simple]
+}
+```
+
 ## Contribute
 
 If you have some ideas about this component, please don't hesitate to let us konw. You can make a new issue to make it better.
