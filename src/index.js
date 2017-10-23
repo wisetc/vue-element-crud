@@ -16,5 +16,6 @@ export default {
 }
 
 export {
-  fields
+  fields,
+  CRUD
 }
