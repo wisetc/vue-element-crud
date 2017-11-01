@@ -3,20 +3,19 @@
     <div class="crud__ctrl">
       <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
-    
     <el-table :data="data" stripe border>
-      <el-table-column v-if="index" type="index" width="60"></el-table-column>
+      <slot name="index"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
-        <el-table-column :key="index" v-if="(fields[key] || '').options" :label="columns[key]" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
-          <template scope="scope">
+        <el-table-column :key="index" v-if="(fields[key] || '').options" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
+          <template slot-scope="scope">
             {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
           </template>
         </el-table-column>
-        <el-table-column :key="index" v-else :label="columns[key]" :prop="key" show-overflow-tooltip></el-table-column>
+        <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
       </template>
 
       <el-table-column label="操作" width="140" align="center">
-        <template scope="scope">
+        <template slot-scope="scope">
           <el-button type="warning" size="small" @click="update(scope.row, scope.$index)">修改</el-button>
           <el-button type="danger" size="small" @click="destroy(scope.row, scope.$index)">删除</el-button>
         </template>
@@ -27,17 +26,18 @@
       :visible="editing" :show-close="false" @open="handleOpen">
       <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="rules" @keyup.native.13="Submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
-          <el-select v-if="fields[key].options" v-model="form[key]" style="width: 100%;">
+          <el-select v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
           <el-date-picker v-else-if="fields[key].type === TYPES.datetime" type="datetime" v-model="form[key]"></el-date-picker>
+          <el-input v-else-if="fields[key].type === Number || 'number'" v-model.number="form[key]" :maxlength="fields[key].length"/>
           <el-input v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
       </el-form>
       <div slot="footer">
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="Submit">提交</el-button>
+        <el-button type="primary" @click="Submit" :loading="loading">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -71,11 +71,11 @@ export default {
     // 表单的显示样式，如果为真，则是行内显示
     inline: { default: false, type: Boolean },
 
-    // 是否显示表格的序号，如果为真，则显示表格的序号
-    index: { default: false, type: Boolean },
-
     // 表格与表单的字段不一致时，传入作为表格的表头
-    table: { default: () => ({}), type: Object }
+    table: { default: () => ({}), type: Object },
+
+    // 是否正在提交数据，请求网络
+    loading: { default: false, type: Boolean }
   },
   data() {
     return {
