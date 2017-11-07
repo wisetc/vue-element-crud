@@ -3,7 +3,8 @@
     <div class="crud__ctrl">
       <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
-    <el-table :data="data" stripe border>
+    <el-table :data="data" stripe border :highlight-current-row="highlightCurrentRow" @expand="handleExpand">
+      <slot name="expand"></slot>
       <slot name="index"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
         <el-table-column :key="index" v-if="(fields[key] || '').options" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
@@ -24,20 +25,21 @@
 
     <el-dialog :title="dialog.title[dialog.status]" :size="dialog.size" :close-on-click-modal="false"
       :visible="editing" :show-close="false" @open="handleOpen">
-      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="rules" @keyup.native.13="Submit">
+      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="rules" @keyup.native.13="submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
           <el-select v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
           <el-date-picker v-else-if="fields[key].type === TYPES.datetime" type="datetime" v-model="form[key]"></el-date-picker>
-          <el-input v-else-if="fields[key].type === Number || 'number'" v-model.number="form[key]" :maxlength="fields[key].length"/>
+          <el-input v-else-if="fields[key].type === Number || fields[key].type === 'number'" v-model.number="form[key]" :maxlength="fields[key].length"/>
           <el-input v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
+        <slot name="addon"></slot>
       </el-form>
       <div slot="footer">
         <el-button @click="closeDialog">取消</el-button>
-        <el-button type="primary" @click="Submit" :loading="loading">提交</el-button>
+        <el-button type="primary" @click="submit" :loading="loading">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -75,7 +77,9 @@ export default {
     table: { default: () => ({}), type: Object },
 
     // 是否正在提交数据，请求网络
-    loading: { default: false, type: Boolean }
+    loading: { default: false, type: Boolean },
+
+    highlightCurrentRow: { default: false, type: Boolean }
   },
   data() {
     return {
@@ -122,7 +126,7 @@ export default {
     destroy(row, index) {
       this.$confirm(`确定要删除？`, '确认', {type: 'warning'}).then(()=> {
         this.$emit('destroy', row, index)
-      })
+      }).catch(_ => {})
     },
     showDialog() {
       this.$emit('open')
@@ -135,7 +139,7 @@ export default {
         this.$refs.form.resetFields()
       }
     },
-    Submit() {
+    submit() {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.$emit('submit', this.dialog.status)
@@ -146,6 +150,9 @@ export default {
       if (value === self) return false
       return this.data.find(item => item[key] === value) ? true : false
     },
+    handleExpand(row, expanded) {
+      this.$emit('expand', row, expanded)
+    }
   }
 }
 </script>
