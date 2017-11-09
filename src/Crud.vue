@@ -3,7 +3,8 @@
     <div class="crud__ctrl">
       <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
-    <el-table :data="data" stripe border :highlight-current-row="highlightCurrentRow" @expand="handleExpand">
+    <el-table :data="data" stripe border :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
+      @row-dblclick="handleRowDblclick">
       <slot name="expand"></slot>
       <slot name="index"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
@@ -17,8 +18,8 @@
 
       <el-table-column label="操作" width="140" align="center">
         <template slot-scope="scope">
-          <el-button type="warning" size="small" @click="update(scope.row, scope.$index)">修改</el-button>
-          <el-button type="danger" size="small" @click="destroy(scope.row, scope.$index)">删除</el-button>
+          <el-button type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
+          <el-button type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -31,7 +32,8 @@
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
-          <el-date-picker v-else-if="fields[key].type === TYPES.datetime" type="datetime" v-model="form[key]"></el-date-picker>
+          <el-date-picker v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
+          <el-input v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none" v-model="form[key]"></el-input>
           <el-input v-else-if="fields[key].type === Number || fields[key].type === 'number'" v-model.number="form[key]" :maxlength="fields[key].length"/>
           <el-input v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
@@ -152,6 +154,12 @@ export default {
     },
     handleExpand(row, expanded) {
       this.$emit('expand', row, expanded)
+    },
+    handleRowClick(row, event, column) {
+      this.$emit('row-click', row, event, column)
+    },
+    handleRowDblclick(row, event) {
+      this.$emit('row-dblclick', row, event)
     }
   }
 }
