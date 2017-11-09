@@ -3,10 +3,12 @@
     <div class="crud__ctrl">
       <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
-    <el-table :data="data" stripe border :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
+    <el-table :data="data" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
       @row-dblclick="handleRowDblclick">
       <slot name="expand"></slot>
+      
       <slot name="index"></slot>
+      <slot name="prepend"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
         <el-table-column :key="index" v-if="(fields[key] || '').options" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
           <template slot-scope="scope">
@@ -15,6 +17,7 @@
         </el-table-column>
         <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
       </template>
+      <slot></slot>
 
       <el-table-column label="操作" width="140" align="center">
         <template slot-scope="scope">
@@ -33,8 +36,9 @@
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
           <el-date-picker v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
-          <el-input v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none" v-model="form[key]"></el-input>
-          <el-input v-else-if="fields[key].type === Number || fields[key].type === 'number'" v-model.number="form[key]" :maxlength="fields[key].length"/>
+          <el-input v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
+            v-model="form[key]" :maxlength="fields[key].length"></el-input>
+          <el-input v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
           <el-input v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
         <slot name="addon"></slot>
@@ -81,7 +85,9 @@ export default {
     // 是否正在提交数据，请求网络
     loading: { default: false, type: Boolean },
 
-    highlightCurrentRow: { default: false, type: Boolean }
+    highlightCurrentRow: { default: false, type: Boolean },
+
+    rowStyle: Function
   },
   data() {
     return {
