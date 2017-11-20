@@ -1,7 +1,7 @@
 <template>
   <div class="crud">
     <div class="crud__ctrl">
-      <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
+      <el-button v-if="actions.includes('create')" type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
     <el-table :data="data" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
       @row-dblclick="handleRowDblclick">
@@ -21,8 +21,8 @@
 
       <el-table-column label="操作" width="140" align="center">
         <template slot-scope="scope">
-          <el-button type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
-          <el-button type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
+          <el-button v-if="actions.includes('update')" type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
+          <el-button v-if="actions.includes('destroy')" type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -31,15 +31,15 @@
       :visible="editing" :show-close="false" @open="handleOpen">
       <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="rules" @keyup.native.13="submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
-          <el-select v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
+          <el-select :disabled="fields[key].disabled" v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
-          <el-date-picker v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
-          <el-input v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
+          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
+          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
             v-model="form[key]" :maxlength="fields[key].length"></el-input>
-          <el-input v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
-          <el-input v-else v-model="form[key]" :maxlength="fields[key].length"/>
+          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
+          <el-input :disabled="fields[key].disabled" v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
         <slot name="addon"></slot>
       </el-form>
@@ -85,8 +85,13 @@ export default {
     // 是否正在提交数据，请求网络
     loading: { default: false, type: Boolean },
 
+    // 操作
+    actions: { default: () => ['create', 'destroy', 'update'], type: Array },
+
+    // 是否高亮显示当前行
     highlightCurrentRow: { default: false, type: Boolean },
 
+    // 表格行样式
     rowStyle: Function
   },
   data() {
