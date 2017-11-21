@@ -31,7 +31,7 @@ If you'd like to treat it as a componet. You can import CRUD as components.
 import { CRUD } from 'vue-element-crud'
 
 export default {
-  component: { 'crud': CRUD }
+  components: { 'crud': CRUD }
 }
 ```
 Otherwise, you can treat it as a plugin.
