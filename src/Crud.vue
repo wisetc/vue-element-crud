@@ -19,7 +19,7 @@
       </template>
       <slot></slot>
 
-      <el-table-column label="操作" width="140" align="center">
+      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="140" align="center">
         <template slot-scope="scope">
           <el-button v-if="actions.includes('update')" type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
           <el-button v-if="actions.includes('destroy')" type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
@@ -39,7 +39,7 @@
           <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
             v-model="form[key]" :maxlength="fields[key].length"></el-input>
           <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
-          <el-input :disabled="fields[key].disabled" v-else v-model="form[key]" :maxlength="fields[key].length"/>
+          <el-input :disabled="fields[key].disabled" :type="fields[key].protected ? 'password' : 'text'" v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
         <slot name="addon"></slot>
       </el-form>
