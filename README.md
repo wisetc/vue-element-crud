@@ -78,13 +78,16 @@ You can read the docs or [examples](example) to find out how to implement props 
 | data | Array | true | --- | Table data array |
 | form | Object | true | --- | Form object to store form item varaibles |
 | fields | Object | true | --- | Object that describes form items structure. eg. `{ name: { label: 'name' }, length: 20, type: String, options: [{ label: 'Mike', value: 'Mike' }] }` |
-| rules | Object | true | --- | Object that describes form items rules. eg. `{ name: [{ required: true, message: 'name is required.' }] }` |
+| rules | Object | false | --- | Object that describes form items rules. eg. `{ name: [{ required: true, message: 'name is required.' }] }` |
 | editing | Boolean | true | --- | Editing status of the form wrapped dialog.|
 | size | String | false | `'large'` | Size the dialog. `'full'` or `'large'` or `small` or omitted. |
 | labelWidth | String | false | `'100px'` | Label width of form and table. |
 | inline | Boolean | false | `false` | Determine whether form items live inline or not. |
-| index | Boolean | false | `false` | If index is true, table index column will be shown. |
-| table | Object | false | `{}` | If table structure is not according to the form structure, you can specify it. eg. `{ name: 'name' }`|
+| table | Object | false | --- | If table structure is not according to the form structure, you can specify it. eg. `{ name: 'name' }`|
+| actions | Array | false | `['create', 'destroy', 'update']` | The crud actions.|
+| loading | Boolean | false | `false` | CRUD is in XHR state. Submit button was disabled if true.|
+| highlightCurrentRow | Boolean | false | `false` | Highlight table current row or not. |
+| rowStyle | Function | false | --- | Table row style function. `Function(row, index)`|
 
 | events | description |
 |:---:|:---:|
@@ -94,6 +97,17 @@ You can read the docs or [examples](example) to find out how to implement props 
 | update | form update event. `(row, index)` passed to the handler. You need to assign row to the `form`. |
 | destroy | table row destory event. `(row, index)` passed to the handler. |
 | submit | form submit event. `(status)` passed to the handler. `0` stands for creating, and `1` stands for updating. |
+| expand | table expand event. `(row, expanded)` passed to the handler. See element-ui table events. |
+| row-click | table row click event. `(row, event, column)` passed to the handler. See element-ui table events. |
+| row-dblclick | table row dblclick event. `(row, event)` passed to the handler. See element-ui table events. |
+
+| slots | description |
+|:---:|:---:|
+| index | Table row index slot. See element-ui table slots. |
+| expand | Table expand slot. See element-ui table slots. |
+| prepend | Table prepend slot. |
+| default | Table append slot. |
+| addon | Form addon slot. |
 
 Your template may look like this.
 

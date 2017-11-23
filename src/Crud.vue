@@ -80,7 +80,7 @@ export default {
     inline: { default: false, type: Boolean },
 
     // 表格与表单的字段不一致时，传入作为表格的表头
-    table: { default: () => ({}), type: Object },
+    table: Object,
 
     // 是否正在提交数据，请求网络
     loading: { default: false, type: Boolean },
@@ -121,7 +121,7 @@ export default {
       return labels
     },
     columns() {
-      return Object.keys(this.table).length ? this.table : this.labels
+      return this.table || this.labels
     },
     computedRules() {
       let rules = {}
