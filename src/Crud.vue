@@ -29,7 +29,7 @@
 
     <el-dialog :title="dialog.title[dialog.status]" :size="dialog.size" :close-on-click-modal="false"
       :visible="editing" :show-close="false" @open="handleOpen">
-      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="rules" @keyup.native.13="submit">
+      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="computedRules" @keyup.native.13="submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
           <el-select :disabled="fields[key].disabled" v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
@@ -64,12 +64,12 @@ export default {
     // 表单字段
     fields: { required: true, type: Object },
 
-    // 表单验证
-    rules: { required: true, type: Object },
-
     // 对话框 el-dialog 的显示和隐藏状态
     editing: { required: true, type: Boolean },
 
+    // 表单验证
+    rules: Object,
+    
     // 对话框 el-dialog 的大小值
     size: { default: 'large', type: String },
 
@@ -122,6 +122,18 @@ export default {
     },
     columns() {
       return Object.keys(this.table).length ? this.table : this.labels
+    },
+    computedRules() {
+      let rules = {}
+      if (this.rules) return this.rules
+      
+      let fields = this.fields
+      for (let k in fields) {
+        if (fields[k].rules) {
+          rules[k] = fields[k].rules.concat({ pattern: /^\S.*?$/, message: '不允许以空格开头' })
+        }
+      }
+      return rules
     }
   },
   methods: {

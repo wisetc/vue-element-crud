@@ -1,6 +1,6 @@
 <template>
 <div>
-  <crud :data="data" :form="form" :rules="rules" :fields="mapItems" :inline="false" index
+  <crud :data="data" :form="form" :fields="mapItems" :inline="false" index
     :editing="editing" @open="handleOpen" @close="handleClose"
     @create="handleCreate" @update="handleUpdate" @destroy="handleDestroy" @submit="handleSubmit"/>
 
@@ -53,16 +53,6 @@ export default {
         model[k] = null
       }
       return model
-    },
-    rules() {
-      let rules = {}
-      let mapItems = this.mapItems
-      for (let k in mapItems) {
-        if (mapItems[k].rules) {
-          rules[k] = mapItems[k].rules
-        }
-      }
-      return rules
     }
   },
   created() {
