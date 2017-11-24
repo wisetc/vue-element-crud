@@ -19,7 +19,7 @@
       </template>
       <slot></slot>
 
-      <el-table-column label="操作" width="140" align="center">
+      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="140" align="center">
         <template slot-scope="scope">
           <el-button v-if="actions.includes('update')" type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
           <el-button v-if="actions.includes('destroy')" type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
@@ -28,8 +28,8 @@
     </el-table>
 
     <el-dialog :title="dialog.title[dialog.status]" :size="dialog.size" :close-on-click-modal="false"
-      :visible="editing" :show-close="false" @open="handleOpen">
-      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="rules" @keyup.native.13="submit">
+      :visible="dialog.visible" :show-close="false" @open="handleOpen">
+      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="computedRules" @keyup.native.13="submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
           <el-select :disabled="fields[key].disabled" v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
@@ -39,7 +39,7 @@
           <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
             v-model="form[key]" :maxlength="fields[key].length"></el-input>
           <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
-          <el-input :disabled="fields[key].disabled" v-else v-model="form[key]" :maxlength="fields[key].length"/>
+          <el-input :disabled="fields[key].disabled" :type="fields[key].protected ? 'password' : 'text'" v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
         <slot name="addon"></slot>
       </el-form>
@@ -65,10 +65,10 @@ export default {
     fields: { required: true, type: Object },
 
     // 表单验证
-    rules: { required: true, type: Object },
-
-    // 对话框 el-dialog 的显示和隐藏状态
-    editing: { required: true, type: Boolean },
+    rules: Object,
+    
+    // 表格与表单的字段不一致时，传入作为表格的表头
+    table: Object,
 
     // 对话框 el-dialog 的大小值
     size: { default: 'large', type: String },
@@ -78,9 +78,6 @@ export default {
 
     // 表单的显示样式，如果为真，则是行内显示
     inline: { default: false, type: Boolean },
-
-    // 表格与表单的字段不一致时，传入作为表格的表头
-    table: { default: () => ({}), type: Object },
 
     // 是否正在提交数据，请求网络
     loading: { default: false, type: Boolean },
@@ -98,6 +95,7 @@ export default {
     return {
       dialog: {
         status: 0,
+        visible: false,
         title: {
           0: '新增',
           1: '修改'
@@ -121,9 +119,22 @@ export default {
       return labels
     },
     columns() {
-      return Object.keys(this.table).length ? this.table : this.labels
+      return this.table || this.labels
+    },
+    computedRules() {
+      if (this.rules) return this.rules
+
+      let rules = {}
+      let fields = this.fields
+      for (let k in fields) {
+        if (fields[k].rules) {
+          rules[k] = fields[k].rules.concat({ pattern: /^\S.*?$/, message: '不允许以空格开头' })
+        }
+      }
+      return rules
     }
   },
+
   methods: {
     create() {
       this.dialog.status = 0
@@ -142,9 +153,11 @@ export default {
       }).catch(_ => {})
     },
     showDialog() {
+      this.dialog.visible = true
       this.$emit('open')
     },
     closeDialog() {
+      this.dialog.visible = false
       this.$emit('close')
     },
     handleOpen() {
@@ -155,7 +168,7 @@ export default {
     submit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$emit('submit', this.dialog.status)
+          this.$emit('submit', this.dialog.status, this.closeDialog)
         }
       })
     },

@@ -1,8 +1,11 @@
 <template>
 <div>
-  <crud :data="data" :form="form" :rules="rules" :fields="mapItems" :inline="false" index
-    :editing="editing" @open="handleOpen" @close="handleClose"
-    @create="handleCreate" @update="handleUpdate" @destroy="handleDestroy" @submit="handleSubmit"/>
+  <crud :data="data" :form="form" :fields="mapItems"
+    @create="handleCreate" @update="handleUpdate" @destroy="handleDestroy" @submit="handleSubmit">
+    <template slot="index">
+      <el-table-column type="index"></el-table-column>
+    </template>
+  </crud>
 
 </div>
 </template>
@@ -15,8 +18,6 @@ export default {
       data: [],
 
       form: {},
-
-      editing: false,
 
       mapItems: {
         name: {
@@ -53,16 +54,6 @@ export default {
         model[k] = null
       }
       return model
-    },
-    rules() {
-      let rules = {}
-      let mapItems = this.mapItems
-      for (let k in mapItems) {
-        if (mapItems[k].rules) {
-          rules[k] = mapItems[k].rules
-        }
-      }
-      return rules
     }
   },
   created() {
@@ -79,38 +70,28 @@ export default {
     },
     handleUpdate(row, index) {
       this.form = { ...row }
-      this.handleOpen()
     },
     handleDestroy(row, index) {
       api.destroy(row.id).then(({data}) => {
         this.$report(data, 'destroy', this.deleteSuccess)
       })
     },
-    handleOpen() {
-      this.editing = true
-    },
-    handleClose() {
-      this.editing = false      
-    },
-    handleSubmit(status) {
+    handleSubmit(status, closeDialog) {
+      this.closeDialog = closeDialog
+      
       if (status === 0) {
         api.create(this.form).then(({data}) => {
-          console.log('response data of create is ', data)
-          this.$report(data, 'create', this.createSuccess)
+          this.$report(data, 'create', this.submitSuccess)
         })
       } else {
         api.update(this.form).then(({data}) => {
-          this.$report(data, 'update', this.updateSuccess)
+          this.$report(data, 'update', this.submitSuccess)
         })
       }
     },
-    createSuccess(data) {
-      this.handleClose()
+    submitSuccess(data) {
       this.loadData()
-    },
-    updateSuccess(data) {
-      this.handleClose()
-      this.loadData()
+      this.closeDialog()
     },
     deleteSuccess(data) {
       this.loadData()
