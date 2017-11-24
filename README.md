@@ -79,7 +79,6 @@ You can read the docs or [examples](example) to find out how to implement props 
 | form | Object | true | --- | Form object to store form item varaibles |
 | fields | Object | true | --- | Object that describes form items structure. eg. `{ name: { label: 'name' }, length: 20, type: String, options: [{ label: 'Mike', value: 'Mike' }] }` |
 | rules | Object | false | --- | Object that describes form items rules. eg. `{ name: [{ required: true, message: 'name is required.' }] }` |
-| editing | Boolean | true | --- | Editing status of the form wrapped dialog.|
 | size | String | false | `'large'` | Size the dialog. `'full'` or `'large'` or `small` or omitted. |
 | labelWidth | String | false | `'100px'` | Label width of form and table. |
 | inline | Boolean | false | `false` | Determine whether form items live inline or not. |
@@ -96,7 +95,7 @@ You can read the docs or [examples](example) to find out how to implement props 
 | create | form create event. You need to assign form model to the `form`. |
 | update | form update event. `(row, index)` passed to the handler. You need to assign row to the `form`. |
 | destroy | table row destory event. `(row, index)` passed to the handler. |
-| submit | form submit event. `(status)` passed to the handler. `0` stands for creating, and `1` stands for updating. |
+| submit | form submit event. `(status, closeDialog)` passed to the handler. `0` stands for creating, and `1` stands for updating. `closeDialog` is a function. |
 | expand | table expand event. `(row, expanded)` passed to the handler. See element-ui table events. |
 | row-click | table row click event. `(row, event, column)` passed to the handler. See element-ui table events. |
 | row-dblclick | table row dblclick event. `(row, event)` passed to the handler. See element-ui table events. |

@@ -28,7 +28,7 @@
     </el-table>
 
     <el-dialog :title="dialog.title[dialog.status]" :size="dialog.size" :close-on-click-modal="false"
-      :visible="editing" :show-close="false" @open="handleOpen">
+      :visible="dialog.visible" :show-close="false" @open="handleOpen">
       <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="computedRules" @keyup.native.13="submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
           <el-select :disabled="fields[key].disabled" v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
@@ -64,12 +64,12 @@ export default {
     // 表单字段
     fields: { required: true, type: Object },
 
-    // 对话框 el-dialog 的显示和隐藏状态
-    editing: { required: true, type: Boolean },
-
     // 表单验证
     rules: Object,
     
+    // 表格与表单的字段不一致时，传入作为表格的表头
+    table: Object,
+
     // 对话框 el-dialog 的大小值
     size: { default: 'large', type: String },
 
@@ -78,9 +78,6 @@ export default {
 
     // 表单的显示样式，如果为真，则是行内显示
     inline: { default: false, type: Boolean },
-
-    // 表格与表单的字段不一致时，传入作为表格的表头
-    table: Object,
 
     // 是否正在提交数据，请求网络
     loading: { default: false, type: Boolean },
@@ -98,6 +95,7 @@ export default {
     return {
       dialog: {
         status: 0,
+        visible: false,
         title: {
           0: '新增',
           1: '修改'
@@ -124,9 +122,9 @@ export default {
       return this.table || this.labels
     },
     computedRules() {
-      let rules = {}
       if (this.rules) return this.rules
-      
+
+      let rules = {}
       let fields = this.fields
       for (let k in fields) {
         if (fields[k].rules) {
@@ -136,6 +134,7 @@ export default {
       return rules
     }
   },
+
   methods: {
     create() {
       this.dialog.status = 0
@@ -154,9 +153,11 @@ export default {
       }).catch(_ => {})
     },
     showDialog() {
+      this.dialog.visible = true
       this.$emit('open')
     },
     closeDialog() {
+      this.dialog.visible = false
       this.$emit('close')
     },
     handleOpen() {
@@ -167,7 +168,7 @@ export default {
     submit() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.$emit('submit', this.dialog.status)
+          this.$emit('submit', this.dialog.status, this.closeDialog)
         }
       })
     },
