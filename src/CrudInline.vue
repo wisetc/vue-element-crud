@@ -46,10 +46,12 @@
               @click.stop="destroy(scope.row, scope.$index)"></el-button>
           </template>
           <template v-else>
-            <el-button type="success" size="small" icon="check"
-              @click.stop="submit(scope.row)"></el-button>
-            <el-button type="danger" size="small" icon="close"
-              @click.stop="cancelEdit(scope.row, scope.$index)"></el-button>
+            <div :class="{ 'shake' : scope.row.__warning__ }" @animationend="scope.row.__warning__ = false">
+              <el-button type="success" size="small" icon="check"
+                @click.stop="submit(scope.row)"></el-button>
+              <el-button type="danger" size="small" icon="close"
+                @click.stop="cancelEdit(scope.row, scope.$index)"></el-button>
+            </div>
           </template>
         </template>
       </el-table-column>
@@ -131,7 +133,7 @@ export default {
           }
         }
 
-        let rowInclude = { __form__: {...item}, __editable__: false, __error__: error }
+        let rowInclude = { __form__: {...item}, __editable__: false, __error__: error, __warning__: false }
         return { ...item, ...rowInclude }
       })
     },
@@ -151,7 +153,19 @@ export default {
         message: ''
       }
     },
+    isSomeRowEditing() {
+      let row = this.injectedData.find(item => item.__editable__)
+      if (row) {
+        row.__warning__ = true
+        return true
+      } else {
+        return false
+      }
+    },
     create() {
+      // only one add row.
+      if (this.isSomeRowEditing()) return
+
       let row = { ...this.model }
       let __error__ = {}
       for (let k in row) {
@@ -163,14 +177,19 @@ export default {
       this.injectedData.push({
         ...row,
         __error__,
+        __warning__: false,
         __editable__: true,
         __form__: { ...this.model }
       })
     },
     update(row, index) {
+      if (this.isSomeRowEditing()) return
+
       row.__editable__ = true
     },
     destroy(row, index) {
+      if (this.isSomeRowEditing()) return
+
       this.$confirm(`确定要删除？`, '确认', {type: 'warning'}).then(()=> {
         this.$emit('destroy', row, index)
       }).catch(_ => {})
@@ -248,5 +267,29 @@ export default {
 }
 .crud__input.is-error .el-input__inner, .crud__select.is-error .el-input__inner {
   border-color: red !important;
+}
+.shake {
+  animation-name: shake;
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes shake {
+  from, to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+
+  10%, 30%, 50%, 70%, 90% {
+    -webkit-transform: translate3d(-10px, 0, 0);
+    transform: translate3d(-10px, 0, 0);
+  }
+
+  20%, 40%, 60%, 80% {
+    -webkit-transform: translate3d(10px, 0, 0);
+    transform: translate3d(10px, 0, 0);
+  }
 }
 </style>
