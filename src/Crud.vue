@@ -10,7 +10,7 @@
       <slot name="index"></slot>
       <slot name="prepend"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
-        <el-table-column :key="index" v-if="(fields[key] || '').options" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
+        <el-table-column :key="index" v-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
           <template slot-scope="scope">
             {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
           </template>

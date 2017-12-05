@@ -41,6 +41,10 @@ export default {
           label: '网址',
           length: 50,
           type: String,
+          options: [
+            { label: 'http://www.example.com', value: 'http://www.example.com' },
+            { label: 'http://www.google.com', value: 'http://www.google.com' }
+          ],
           rules: [{ type: 'url', message: '网址格式不正确' }]
         },
       }
