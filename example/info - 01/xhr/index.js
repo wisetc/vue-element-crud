@@ -1,5 +1,5 @@
 let initData = [
-  { id: 1, name: '大暗扣', phone: '18588497777', mail: 'zhi@xxx.com', site: 'http://www.example.com' }
+  { id: 1, name: '大暗扣', phone: '1858849****', mail: 'zhi@xxx.com', site: 'http://www.example.com' }
 ]
 
 export const Customer = {
@@ -15,11 +15,12 @@ export const Customer = {
     })
   }),
   create: params => new Promise((resolve, reject) => {
-    initData = initData.concat({ ...params, id: initData[initData.length - 1].id + 1 })
+    let data = { ...params, id: initData[initData.length - 1].id + 1 }
+    initData = initData.concat(data)
     resolve({
       data: {
         data: {
-          data: initData
+          data: data
         },
         code: 1
       },

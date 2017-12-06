@@ -15,11 +15,12 @@ export const Customer = {
     })
   }),
   create: params => new Promise((resolve, reject) => {
-    initData = initData.concat({ ...params, id: initData[initData.length - 1].id + 1 })
+    let data = { ...params, id: initData[initData.length - 1].id + 1 }
+    initData = initData.concat(data)
     resolve({
       data: {
         data: {
-          data: initData
+          data: data
         },
         code: 1
       },

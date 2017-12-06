@@ -96,7 +96,7 @@ export default {
       // 选项不可重复时，传入当前行判断选项是否为此当前行的属性
       updatingRow: null,
 
-      TYPES
+      TYPES,
     }
   },
   computed: {
@@ -163,10 +163,7 @@ export default {
       }
     },
     create() {
-      // only one add row.
-      if (this.isSomeRowEditing()) return
-
-      let row = { ...this.model }
+      let row = { ...this.model, id: null }
       let __error__ = {}
       for (let k in row) {
         __error__[k] = {
@@ -183,14 +180,11 @@ export default {
       })
     },
     update(row, index) {
-      if (this.isSomeRowEditing()) return
-
       row.__editable__ = true
     },
     destroy(row, index) {
-      if (this.isSomeRowEditing()) return
-
       this.$confirm(`确定要删除？`, '确认', {type: 'warning'}).then(()=> {
+        this.remove(index)
         this.$emit('destroy', row, index)
       }).catch(_ => {})
     },
@@ -199,7 +193,7 @@ export default {
         let _row = {}
         let error = {}
         for (let k in row) {
-          if (k !== '__form__' && k !== '__editable__' && k !== '__error__') {
+          if (k !== '__form__' && k !== '__editable__' && k !== '__error__' && k !== '__warning__') {
             _row[k] = row[k]
 
             error[k] = {
@@ -233,16 +227,29 @@ export default {
       })
     },
 
-    submit(row) {
+    submit(row, index) {
       let status = row.id ? 1: 0
       const switchEditable = (editable=false) => {
         row.__editable__ = editable
       }
+      const updateRowId = (id=null) => {
+        row.id = id
+      }
+
       this.validate(row.__form__, row.__error__).then((valid) => {
         if (valid) {
-          this.$emit('submit', status, row.__form__, switchEditable)
+          this.commit(row)
+          this.$emit('submit', status, row.__form__, switchEditable, updateRowId)
         }
       })
+    },
+    remove(index) {
+      this.injectedData.splice(index, 1)
+    },
+    commit(row) {
+      for(let k in row.__form__) {
+        row[k] = row.__form__[k]
+      }
     },
 
     handleExpand(row, expanded) {

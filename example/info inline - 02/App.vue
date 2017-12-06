@@ -1,6 +1,6 @@
 <template>
 <div>
-  <crud-inline :data="data" :fields="mapItems"
+  <crud-inline :data.sync="data" :fields="mapItems"
     @destroy="handleDestroy" @submit="handleSubmit">
     <template slot="index">
       <el-table-column type="index"></el-table-column>
@@ -62,29 +62,25 @@ export default {
 
     handleDestroy(row, index) {
       api.destroy(row.id).then(({data}) => {
-        this.$report(data, 'destroy', this.deleteSuccess)
+        this.$report(data, 'destroy', () => {})
       })
     },
-    handleSubmit(status, form, switchEditable) {
-      this.switchEditable = switchEditable
+    handleSubmit(status, form, switchEditable, updateRowId) {
       if (status === 0) {
-        console.log('creating form -> ', form)
         api.create(form).then(({data}) => {
-          this.$report(data, 'create', this.submitSuccess)
+          this.$report(data, 'create', () => {
+            let id = data.data.data.id
+            switchEditable(false)
+            updateRowId(id)
+          })
         })
       } else {
-        console.log('updating form -> ', form)
         api.update(form).then(({data}) => {
-          this.$report(data, 'update', this.submitSuccess)
+          this.$report(data, 'update', () => {
+            switchEditable(false)
+          })
         })
       }
-    },
-    submitSuccess(data) {
-      this.loadData()
-      this.switchEditable()
-    },
-    deleteSuccess(data) {
-      this.loadData()
     }
   }
 }
