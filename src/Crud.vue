@@ -35,6 +35,7 @@
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
+          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.date || fields[key].type === 'date'" type="date" v-model="form[key]"></el-date-picker>
           <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
           <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
             v-model="form[key]" :maxlength="fields[key].length"></el-input>
