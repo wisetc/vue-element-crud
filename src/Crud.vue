@@ -10,16 +10,16 @@
       <slot name="index"></slot>
       <slot name="prepend"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
-        <el-table-column :key="index" v-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
+        <el-table-column :key="index" v-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
           <template slot-scope="scope">
             {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
           </template>
         </el-table-column>
-        <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
+        <el-table-column :key="index" v-else :label="columns[key]" :min-width="fields[key].width || labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
       </template>
       <slot></slot>
 
-      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="140" align="center">
+      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="148" align="center">
         <template slot-scope="scope">
           <el-button v-if="actions.includes('update')" type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
           <el-button v-if="actions.includes('destroy')" type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
@@ -200,6 +200,7 @@ export default {
 }
 .crud__form--inline .el-form-item {
   width: 33%;
+  height: 38px;
   float: left;
   padding: 0 8px;
   box-sizing: border-box;

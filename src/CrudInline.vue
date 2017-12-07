@@ -234,6 +234,7 @@ export default {
       }
       const updateRowId = (id=null) => {
         row.id = id
+        row.__form__.id = id
       }
 
       this.validate(row.__form__, row.__error__).then((valid) => {
