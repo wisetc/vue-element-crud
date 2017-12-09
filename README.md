@@ -2,7 +2,11 @@
 
 > A wrapped vue CRUD component based on the famous vue UI componets -- element-ui. 
 
+> 一款基于 `element-ui` 组件的增删改查组件。
+
 Here is a simple [demo](https://rawgit.com/wisetc/vue-element-crud/master/index.html).
+
+您可以阅读项目中的示例 [examples](example) 和源码文件 [Crud.vue](src/Crud.vue) 来帮助您理解组件的具体用法。
 
 ## Local development
 
@@ -48,10 +52,10 @@ $ vue init webpack <project-name>
 
 #### Step-2, install
 
-This component is dependent on element-ui, you should first install and then import element-ui to work.
+This component is dependent on element-ui, and `element-ui` will automatically installed when you install `vue-element-crud`, so you don't have to install `element-ui` in addition.
 
 ```bash
-$ npm install -S element-ui vue-element-crud
+$ npm install -S vue-element-crud
 ```
 
 #### Step-3, vue use
