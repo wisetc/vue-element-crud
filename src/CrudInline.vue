@@ -1,7 +1,9 @@
 <template>
   <div class="crud">
-    <div class="crud__ctrl">
-      <el-button v-if="actions.includes('create')" type="primary" @click="create" size="small" icon="plus"></el-button>
+    <div class="crud__ctrl" v-if="actions.includes('create')">
+      <slot name="action.create">
+        <el-button type="primary" @click="create" size="small" icon="plus"></el-button>
+      </slot>
     </div>
     <el-table :data="injectedData" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow"
       @expand="handleExpand" @row-click="handleRowClick" @row-dblclick="handleRowDblclick">
