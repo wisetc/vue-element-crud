@@ -1,6 +1,6 @@
 <template>
   <div class="crud">
-    <div class="crud__ctrl">
+    <div class="crud__ctrl" v-if="actions.includes('create')">
       <el-button v-if="actions.includes('create')" type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
     <el-table :data="data" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
@@ -15,7 +15,12 @@
             {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
           </template>
         </el-table-column>
-        <el-table-column :key="index" v-else :label="columns[key]" :min-width="fields[key].width || labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
+        <el-table-column :key="index" v-else-if="key in fields && (fields[key].type === TYPES.date || fields[key].type === 'date')" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip>
+          <template slot-scope="scope">
+            {{ scope.row[key] ? scope.row[key].slice(0, 10) : '' }}
+          </template>
+        </el-table-column>
+        <el-table-column :key="index" v-else :label="columns[key]" :min-width="fields[key] ? fields[key].width : labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
       </template>
       <slot></slot>
 
@@ -31,7 +36,9 @@
       :visible="dialog.visible" :show-close="false" @open="handleOpen">
       <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="computedRules" @keyup.native.13="submit">
         <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
-          <el-select :disabled="fields[key].disabled" v-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
+          <slot v-if="fields[key].slot" :name="fields[key].slot"></slot>
+
+          <el-select :disabled="fields[key].disabled" v-else-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
@@ -201,7 +208,7 @@ export default {
 }
 .crud__form--inline .el-form-item {
   width: 33%;
-  height: 38px;
+  min-height: 38px;
   float: left;
   padding: 0 8px;
   box-sizing: border-box;

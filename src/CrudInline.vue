@@ -26,8 +26,11 @@
         <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip>
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
-              <el-input v-model="scope.row.__form__[key]" :placeholder="columns[key]" class="crud__input"
-                :class="{ 'is-error': scope.row.__error__[key].isError }" @change="clearErrors(scope.row, key)" @keydown.13.native="submit(scope.row)"></el-input>
+              <el-input :type="fields[key].type === Number ? 'number' : 'text'"
+                v-model="scope.row.__form__[key]" :placeholder="columns[key]"
+                :maxlength="fields[key].length" class="crud__input"
+                :class="{ 'is-error': scope.row.__error__[key].isError }" @change="clearErrors(scope.row, key)"
+                @keydown.13.native="submit(scope.row)"></el-input>
             </template>
             <template v-else>
               {{ scope.row[key] }}
