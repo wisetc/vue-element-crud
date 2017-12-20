@@ -44,7 +44,8 @@
           </el-select>
           <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.date || fields[key].type === 'date'" type="date" v-model="form[key]"></el-date-picker>
           <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
-          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'" type="textarea" resize="none"
+          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'"
+            type="textarea" resize="none" @keyup.13.native.stop="doNothing"
             v-model="form[key]" :maxlength="fields[key].length"></el-input>
           <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
           <el-input :disabled="fields[key].disabled" :type="fields[key].protected ? 'password' : 'text'" v-else v-model="form[key]" :maxlength="fields[key].length"/>
@@ -144,6 +145,7 @@ export default {
   },
 
   methods: {
+    doNothing() {},
     create() {
       this.dialog.status = 0
       this.showDialog()

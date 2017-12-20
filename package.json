@@ -1,6 +1,6 @@
 {
   "name": "vue-element-crud",
-  "version": "2.5.4",
+  "version": "2.5.6",
   "description": "A CRUD component for vue projects to create, retrieve, update and destroy models.",
   "main": "dist/crud.common.js",
   "directories": {
@@ -32,8 +32,7 @@
   "homepage": "https://github.com/wisetc/vue-element-crud#readme",
   "dependencies": {
     "element-ui": "^1.4.7",
-    "vue": "^2.4.4",
-    "vue-element-crud": "^2.4.2"
+    "vue": "2.5.9"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
