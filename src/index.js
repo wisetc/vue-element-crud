@@ -1,6 +1,6 @@
 import CRUD from './Crud.vue'
 import CRUDInline from './CrudInline.vue'
-import Simple from './mixins/Simple.vue'
+import Simple from './mixins/Simple'
 import fields from './fields'
 import report from './report'
 
