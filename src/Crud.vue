@@ -3,7 +3,7 @@
     <div class="crud__ctrl">
       <el-button v-if="actions.includes('create')" type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
-    <el-table :data="data" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
+    <el-table :data="data" stripe :border="border || undefined" :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
       @row-dblclick="handleRowDblclick">
       <slot name="expand"></slot>
       
@@ -90,7 +90,10 @@ export default {
     highlightCurrentRow: { default: false, type: Boolean },
 
     // 表格行样式
-    rowStyle: Function
+    rowStyle: Function,
+
+    // 表格单元格是否带边框
+    border: { type: Boolean, default: true }
   },
   data() {
     return {
