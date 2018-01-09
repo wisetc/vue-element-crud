@@ -1,7 +1,9 @@
 <template>
   <div class="crud">
-    <div class="crud__ctrl">
-      <el-button v-if="actions.includes('create')" type="primary" @click="create" size="small" icon="plus"></el-button>
+    <div class="crud__ctrl" v-if="actions.includes('create')">
+      <slot name="action.create">
+        <el-button type="primary" @click="create" size="small" icon="plus"></el-button>
+      </slot>
     </div>
     <el-table :data="injectedData" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow"
       @expand="handleExpand" @row-click="handleRowClick" @row-dblclick="handleRowDblclick">
@@ -26,8 +28,11 @@
         <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip>
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
-              <el-input v-model="scope.row.__form__[key]" :placeholder="columns[key]" class="crud__input"
-                :class="{ 'is-error': scope.row.__error__[key].isError }" @change="clearErrors(scope.row, key)" @keydown.13.native="submit(scope.row)"></el-input>
+              <el-input :type="fields[key].type === Number ? 'number' : 'text'"
+                v-model="scope.row.__form__[key]" :placeholder="columns[key]"
+                :maxlength="fields[key].length" class="crud__input"
+                :class="{ 'is-error': scope.row.__error__[key].isError }" @change="clearErrors(scope.row, key)"
+                @keydown.13.native="submit(scope.row)"></el-input>
             </template>
             <template v-else>
               {{ scope.row[key] }}
