@@ -3,7 +3,7 @@ var webpack = require('webpack')
 
 module.exports = {
   // entry: './example/info - 01/main.js',
-  entry: './example/info inline - 02/main.js',
+  entry: './example/info - 01/main.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',

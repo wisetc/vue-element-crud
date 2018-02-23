@@ -2,7 +2,7 @@
 <div>
   <crud :data="data" :form="form" :fields="mapItems"
     @create="handleCreate" @update="handleUpdate" @destroy="handleDestroy" @submit="handleSubmit">
-    <template slot="index">
+    <template slot="prepend">
       <el-table-column type="index"></el-table-column>
     </template>
   </crud>

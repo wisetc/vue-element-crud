@@ -1,16 +1,20 @@
 <template>
   <div class="crud">
     <div class="crud__ctrl" v-if="actions.includes('create')">
-      <el-button v-if="actions.includes('create')" type="primary" @click="create" size="small" icon="plus">新增</el-button>
+      <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
     </div>
     <el-table :data="data" stripe :border="border || undefined" :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
       @row-dblclick="handleRowDblclick">
-      <slot name="expand"></slot>
-      
-      <slot name="index"></slot>
       <slot name="prepend"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
-        <el-table-column :key="index" v-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
+        <el-table-column :key="index" v-if="key in fields && fields[key].options
+          && fields[key].formatter && typeof fields[key].formatter === 'function'"
+          :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
+          <template slot-scope="scope">
+            {{ fields[key].formatter(scope.row, scope.column, scope.row[key]) }}
+          </template>
+        </el-table-column>
+        <el-table-column :key="index" v-else-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
           <template slot-scope="scope">
             {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
           </template>
@@ -61,7 +65,7 @@
 </template>
 
 <script>
-import TYPES from './fields'
+import TYPES from './fieldType'
 export default {
   props: {
     // 表格数据

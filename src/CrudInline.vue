@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import TYPES from './fields'
+import TYPES from './fieldType'
 import schema from 'async-validator'
 export default {
   props: {

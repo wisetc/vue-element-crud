@@ -1,7 +1,7 @@
 import CRUD from './Crud.vue'
 import CRUDInline from './CrudInline.vue'
 import Simple from './mixins/Simple'
-import fields from './fields'
+import fields from './fieldType'
 import report from './report'
 
 const install = (Vue, opt) => {
