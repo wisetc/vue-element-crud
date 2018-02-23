@@ -19,7 +19,7 @@
             {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
           </template>
         </el-table-column>
-        <el-table-column :key="index" v-else-if="key in fields && (fields[key].type === TYPES.date || fields[key].type === 'date')" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip>
+        <el-table-column :key="index" v-else-if="key in fields && fields[key].type === TYPES.date" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip>
           <template slot-scope="scope">
             {{ scope.row[key] ? scope.row[key].slice(0, 10) : '' }}
           </template>
@@ -46,12 +46,12 @@
             <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
               :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
           </el-select>
-          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.date || fields[key].type === 'date'" type="date" v-model="form[key]"></el-date-picker>
-          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.datetime || fields[key].type === 'datetime'" type="datetime" v-model="form[key]"></el-date-picker>
-          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text || fields[key].type === 'text'"
+          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.date" type="date" v-model="form[key]"></el-date-picker>
+          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.datetime" type="datetime" v-model="form[key]"></el-date-picker>
+          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text"
             type="textarea" resize="none" @keyup.13.native.stop="doNothing"
             v-model="form[key]" :maxlength="fields[key].length"></el-input>
-          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === Number || fields[key].type === 'number'" type="number" v-model.number="form[key]" :maxlength="fields[key].length"/>
+          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.integer || fields[key].type === TYPES.float" type="number" v-model.number="form[key]" @change="handleNumberChange(key, $event, fields[key].length)"/>
           <el-input :disabled="fields[key].disabled" :type="fields[key].protected ? 'password' : 'text'" v-else v-model="form[key]" :maxlength="fields[key].length"/>
         </el-form-item>
         <slot name="addon"></slot>
@@ -201,6 +201,13 @@ export default {
     },
     handleRowDblclick(row, event) {
       this.$emit('row-dblclick', row, event)
+    },
+    handleNumberChange(key, event, length) {
+      const tooLong = event.toString().length > length
+      const slicedText = event.toString().slice(0, length)
+      this.$nextTick(() => {
+        this.form[key] = slicedText
+      })
     }
   }
 }

@@ -23,24 +23,21 @@ export default {
         name: {
           label: '姓名',
           length: 50,
-          type: String,
           rules: [{ required: true, message: '此项不能为空' }]
         },
         phone: {
           label: '手机',
           length: 11,
-          type: Number
+          type: 'integer'
         },
         mail: {
           label: '邮箱',
           length: 50,
-          type: String,
           rules: [{ required: true, message: '此项不能为空' }, { type: 'email', message: '邮箱地址不正确' }]
         },
         site: {
           label: '网址',
           length: 50,
-          type: String,
           options: [
             { label: 'http://www.example.com', value: 'http://www.example.com' },
             { label: 'http://www.google.com', value: 'http://www.google.com' }

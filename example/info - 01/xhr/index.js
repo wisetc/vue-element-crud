@@ -1,5 +1,5 @@
 let initData = [
-  { id: 1, name: '大暗扣', phone: '1858849****', mail: 'zhi@xxx.com', site: 'http://www.example.com' }
+  { id: 1, name: '大暗扣', phone: 1858849, mail: 'zhi@xxx.com', site: 'http://www.example.com' }
 ]
 
 export const Customer = {
