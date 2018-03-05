@@ -15,8 +15,14 @@
         <el-table-column :key="index" v-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
-              <el-select v-model="scope.row.__form__[key]" :placeholder="columns[key]" class="crud__select"
-                :class="{ 'is-error': scope.row.__error__[key].isError }" @change="clearErrors(scope.row, key)">
+              <el-select
+                v-bind="fields[key]"
+                v-model="scope.row.__form__[key]"
+                :placeholder="columns[key]"
+                class="crud__select"
+                :class="{ 'is-error': scope.row.__error__[key].isError }"
+                @change="clearErrors(scope.row, key)"
+              >
                 <el-option :key="index" v-for="(o, index) in fields[key].options" v-bind="o"></el-option>
               </el-select>
             </template>
@@ -30,6 +36,7 @@
             <template v-if="scope.row.__editable__">
               <template v-if="fields[key].editable || fields[key].editable === undefined">
                 <el-input v-if="fields[key].type === 'string' || fields[key].type === 'text'"
+                  v-bind="fields[key]"
                   v-model="scope.row.__form__[key]"
                   :placeholder="columns[key]"
                   :maxlength="fields[key].maxlength"
@@ -38,6 +45,7 @@
                   @change="clearErrors(scope.row, key)"
                   @keydown.13.native="submit(scope.row)"></el-input>
                 <el-input v-else-if="fields[key].type === 'number'"
+                  v-bind="fields[key]"
                   type="number"
                   v-model="scope.row.__form__[key]"
                   :placeholder="columns[key]"
@@ -47,6 +55,7 @@
                   @input.native="handleNumberInput(scope.row, key, fields[key].maxlength)"
                   @keydown.13.native="submit(scope.row)"></el-input>
                 <el-date-picker v-else-if="fields[key].type === 'date' || fields[key].type === 'datetime'"
+                  v-bind="fields[key]"
                   :type="fields[key].type"
                   :placeholder="columns[key]"
                   style="width:100%"
@@ -55,6 +64,7 @@
                   @change="clearErrors(scope.row, key)"
                 ></el-date-picker>
                 <el-radio-group
+                  v-bind="fields[key]"
                   v-else-if="fields[key].type === 'boolean'"
                   v-model="scope.row.__form__[key]"
                   size="small"
