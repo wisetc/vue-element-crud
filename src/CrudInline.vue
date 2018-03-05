@@ -2,7 +2,7 @@
   <div class="crud">
     <div class="crud__ctrl" v-if="actions.includes('create')">
       <slot name="action.create">
-        <el-button type="primary" @click="create" size="small" icon="plus"></el-button>
+        <el-button type="primary" @click="create" size="small" icon="el-icon-plus"></el-button>
       </slot>
     </div>
     <el-table :data="injectedData" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow"
@@ -45,16 +45,16 @@
       <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="120" align="center">
         <template slot-scope="scope">
           <template v-if="!scope.row.__editable__">
-            <el-button v-if="actions.includes('update')" type="warning" size="small" icon="edit"
+            <el-button v-if="actions.includes('update')" type="warning" size="small" icon="el-icon-edit"
               @click.stop="update(scope.row, scope.$index)"></el-button>
-            <el-button v-if="actions.includes('destroy')" type="danger" size="small" icon="delete"
+            <el-button v-if="actions.includes('destroy')" type="danger" size="small" icon="el-icon-delete"
               @click.stop="destroy(scope.row, scope.$index)"></el-button>
           </template>
           <template v-else>
             <div :class="{ 'shake' : scope.row.__warning__ }" @animationend="scope.row.__warning__ = false">
-              <el-button type="success" size="small" icon="check"
+              <el-button type="success" size="small" icon="el-icon-check"
                 @click.stop="submit(scope.row)"></el-button>
-              <el-button type="danger" size="small" icon="close"
+              <el-button type="danger" size="small" icon="el-icon-close"
                 @click.stop="cancelEdit(scope.row, scope.$index)"></el-button>
             </div>
           </template>

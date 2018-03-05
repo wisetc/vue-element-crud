@@ -1,7 +1,7 @@
 <template>
   <div class="crud">
     <div class="crud__ctrl" v-if="actions.includes('create')">
-      <el-button type="primary" @click="create" size="small" icon="plus">新增</el-button>
+      <el-button type="primary" @click="create" size="small" icon="el-icon-plus">新增</el-button>
     </div>
     <el-table :data="data" stripe :border="border || undefined" :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
       @row-dblclick="handleRowDblclick">
