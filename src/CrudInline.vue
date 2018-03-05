@@ -16,7 +16,7 @@
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
               <el-select
-                v-bind="fields[key]"
+                v-bind="fields[key].rest && typeof fields[key].rest === 'object' ? fields[key].rest : undefined"
                 v-model="scope.row.__form__[key]"
                 :placeholder="columns[key]"
                 class="crud__select"
@@ -36,7 +36,7 @@
             <template v-if="scope.row.__editable__">
               <template v-if="fields[key].editable || fields[key].editable === undefined">
                 <el-input v-if="fields[key].type === 'string' || fields[key].type === 'text'"
-                  v-bind="fields[key]"
+                  v-bind="fields[key].rest && typeof fields[key].rest === 'object' ? fields[key].rest : undefined"
                   v-model="scope.row.__form__[key]"
                   :placeholder="columns[key]"
                   :maxlength="fields[key].maxlength"
@@ -45,7 +45,7 @@
                   @change="clearErrors(scope.row, key)"
                   @keydown.13.native="submit(scope.row)"></el-input>
                 <el-input v-else-if="fields[key].type === 'number'"
-                  v-bind="fields[key]"
+                  v-bind="fields[key].rest && typeof fields[key].rest === 'object' ? fields[key].rest : undefined"
                   type="number"
                   v-model="scope.row.__form__[key]"
                   :placeholder="columns[key]"
@@ -55,7 +55,7 @@
                   @input.native="handleNumberInput(scope.row, key, fields[key].maxlength)"
                   @keydown.13.native="submit(scope.row)"></el-input>
                 <el-date-picker v-else-if="fields[key].type === 'date' || fields[key].type === 'datetime'"
-                  v-bind="fields[key]"
+                  v-bind="fields[key].rest && typeof fields[key].rest === 'object' ? fields[key].rest : undefined"
                   :type="fields[key].type"
                   :placeholder="columns[key]"
                   style="width:100%"
@@ -64,7 +64,7 @@
                   @change="clearErrors(scope.row, key)"
                 ></el-date-picker>
                 <el-radio-group
-                  v-bind="fields[key]"
+                  v-bind="fields[key].rest && typeof fields[key].rest === 'object' ? fields[key].rest : undefined"
                   v-else-if="fields[key].type === 'boolean'"
                   v-model="scope.row.__form__[key]"
                   size="small"

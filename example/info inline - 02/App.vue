@@ -40,7 +40,9 @@ export default {
         site: {
           label: '网址',
           maxlength: 50,
-          clearable: true,
+          rest: {
+            clearable: true,
+          },
           type: 'string',
           options: [
             { label: 'http://www.example.com', value: 'http://www.example.com' },
