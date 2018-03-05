@@ -28,21 +28,63 @@
         <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip>
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
-              <el-input :type="fields[key].type === Number ? 'number' : 'text'"
-                v-model="scope.row.__form__[key]" :placeholder="columns[key]"
-                :maxlength="fields[key].length" class="crud__input"
-                :class="{ 'is-error': scope.row.__error__[key].isError }" @change="clearErrors(scope.row, key)"
-                @keydown.13.native="submit(scope.row)"></el-input>
+              <template v-if="fields[key].editable || fields[key].editable === undefined">
+                <el-input v-if="fields[key].type === 'string' || fields[key].type === 'text'"
+                  v-model="scope.row.__form__[key]"
+                  :placeholder="columns[key]"
+                  :maxlength="fields[key].maxlength"
+                  class="crud__input"
+                  :class="{ 'is-error': scope.row.__error__[key].isError }"
+                  @change="clearErrors(scope.row, key)"
+                  @keydown.13.native="submit(scope.row)"></el-input>
+                <el-input v-else-if="fields[key].type === 'number'"
+                  type="number"
+                  v-model="scope.row.__form__[key]"
+                  :placeholder="columns[key]"
+                  class="crud__input"
+                  :class="{ 'is-error': scope.row.__error__[key].isError }"
+                  @change="clearErrors(scope.row, key)"
+                  @input.native="handleNumberInput(scope.row, key, fields[key].maxlength)"
+                  @keydown.13.native="submit(scope.row)"></el-input>
+                <el-date-picker v-else-if="fields[key].type === 'date' || fields[key].type === 'datetime'"
+                  :type="fields[key].type"
+                  :placeholder="columns[key]"
+                  style="width:100%"
+                  class="crud__input"
+                  v-model="scope.row.__form__[key]"
+                  @change="clearErrors(scope.row, key)"
+                ></el-date-picker>
+                <el-radio-group
+                  v-else-if="fields[key].type === 'boolean'"
+                  v-model="scope.row.__form__[key]"
+                  size="small"
+                  @change="clearErrors(scope.row, key)"
+                >
+                  <el-radio-button label="是"></el-radio-button>
+                  <el-radio-button label="否"></el-radio-button>
+                </el-radio-group>
+              </template>
+              <template v-else>
+                <template v-if="fields[key].formatter">
+                  {{ fields[key].formatter(scope.row[key], scope.row) }}
+                </template>
+              </template>
+              
             </template>
             <template v-else>
-              {{ scope.row[key] }}
+              <template v-if="fields[key].formatter && fields[key].editable !== false">
+                {{ fields[key].formatter(scope.row[key], scope.row) }}
+              </template>
+              <template v-else>
+                {{ scope.row[key] }}
+              </template>
             </template>
           </template>
         </el-table-column>
       </template>
       <slot></slot>
 
-      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="120" align="center">
+      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="150" align="center">
         <template slot-scope="scope">
           <template v-if="!scope.row.__editable__">
             <el-button v-if="actions.includes('update')" type="warning" size="small" icon="el-icon-edit"
@@ -156,6 +198,14 @@ export default {
       row.__error__[key] = {
         isError: false,
         message: ''
+      }
+    },
+    handleNumberInput(row, key, maxlength) {
+      const value = row.__form__[key].toString()
+      if (value.length > maxlength) {
+        this.$nextTick(() => {
+          row.__form__[key] = Number(value.slice(0, -1))
+        })
       }
     },
     isSomeRowEditing() {
