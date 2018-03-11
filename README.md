@@ -81,7 +81,7 @@ You can read the docs or [examples](example) to find out how to implement props 
 |:---:|:---:|:---:|:---:|:---:|
 | data | Array | true | --- | Table data array |
 | form | Object | true | --- | Form object to store form item varaibles |
-| fields | Object | true | --- | Object that describes form items structure. eg. `{ name: { label: 'name' }, length: 20, type: String, options: [{ label: 'Mike', value: 'Mike' }] }` |
+| fields | Object | true | --- | Object that describes form items structure. eg. `{ name: { label: 'name', length: 20, type: String, options: [{ label: 'Mike', value: 'Mike' }] }` |
 | rules | Object | false | --- | Object that describes form items rules. eg. `{ name: [{ required: true, message: 'name is required.' }] }` |
 | size | String | false | `'large'` | Size the dialog. `'full'` or `'large'` or `small` or omitted. |
 | labelWidth | String | false | `'100px'` | Label width of form and table. |
