@@ -9,4 +9,4 @@ const fieldTypes = [
   'objectid',
 ];
 
-export default fieldTypes.reduce((x, y, i) => ({ ...x, [y]: y }), {});
+export default fieldTypes.reduce((x, y) => ({ ...x, [y]: y }), {});
