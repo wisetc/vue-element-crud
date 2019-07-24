@@ -32,7 +32,8 @@
   "homepage": "https://github.com/wisetc/vue-element-crud#readme",
   "dependencies": {
     "element-ui": "^2.2.0",
-    "vue": "2.6.10"
+    "vue": "2.6.10",
+    "vue-class-component": "^7.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
