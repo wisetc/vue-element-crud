@@ -120,7 +120,7 @@
 
       <el-table-column
         v-if="actions.includes('update') || actions.includes('destroy')"
-        label="__('Actions')"
+        :label="actionsColumnLabel"
         width="150"
         align="center"
       >
@@ -258,6 +258,9 @@ export default {
         model[k] = null
       }
       return model
+    },
+    actionsColumnLabel() {
+      return __('Actions')
     },
   },
 
