@@ -1,13 +1,16 @@
 <template>
-<div>
-  <crud-inline :data.sync="data" :fields="mapItems"
-    @destroy="handleDestroy" @submit="handleSubmit">
-    <template slot="index">
-      <el-table-column type="index"></el-table-column>
-    </template>
-  </crud-inline>
-
-</div>
+  <div>
+    <crud-inline
+      :data.sync="data"
+      :fields="mapItems"
+      @destroy="handleDestroy"
+      @submit="handleSubmit"
+    >
+      <template slot="index">
+        <el-table-column type="index"></el-table-column>
+      </template>
+    </crud-inline>
+  </div>
 </template>
 
 <script>
@@ -21,58 +24,65 @@ export default {
 
       mapItems: {
         name: {
-          label: '姓名',
+          label: __('name'),
           maxlength: 50,
           type: 'string',
-          rules: [{ required: true, message: '此项不能为空' }]
+          rules: [{ required: true, message: __('This item cannot be empty') }],
         },
         phone: {
-          label: '手机',
+          label: __('phone'),
           maxlength: 11,
-          type: 'number'
+          type: 'number',
         },
         mail: {
-          label: '邮箱',
+          label: __('mail'),
           maxlength: 50,
           type: 'string',
-          rules: [{ required: true, message: '此项不能为空' }, { type: 'email', message: '邮箱地址不正确' }]
+          rules: [
+            { required: true, message: __('This item cannot be empty') },
+            { type: 'email', message: __('Email address format is incorrect') },
+          ],
         },
         site: {
-          label: '网址',
+          label: __('site'),
           maxlength: 50,
           clearable: true,
           type: 'string',
           options: [
-            { label: 'http://www.example.com', value: 'http://www.example.com' },
-            { label: 'http://www.google.com', value: 'http://www.google.com' }
+            {
+              label: 'http://www.example.com',
+              value: 'http://www.example.com',
+            },
+            { label: 'http://www.google.com', value: 'http://www.google.com' },
           ],
-          rules: [{ type: 'url', message: '网址格式不正确' }]
+          rules: [{ type: 'url', message: __('URL format is incorrect') }],
         },
         birth: {
-          label: '出生日',
-          type: 'date'
+          label: __('birth'),
+          type: 'date',
         },
         married: {
-          label: '已婚',
+          label: __('married'),
           type: 'boolean',
-          formatter: function (value) {
-            return value ? '是' : '否'
+          formatter: function(value) {
+            return value ? __('Yes') : __('No')
           },
         },
         age: {
-          label: '年龄',
+          label: __('age'),
           editable: false,
-          formatter: function (value, row) {
+          formatter: function(value, row) {
             let birth = row.__form__.birth
-            let birthFullYear = typeof birth === 'string' ?
-              Number(birth.slice(0, 4))
-              : row.__form__.birth.getUTCFullYear()
+            let birthFullYear =
+              typeof birth === 'string'
+                ? Number(birth.slice(0, 4))
+                : row.__form__.birth.getUTCFullYear()
             const age = new Date().getUTCFullYear() - birthFullYear
             row.__form__.age = age
             return age
-          }
-        }
-      }
+          },
+        },
+      },
     }
   },
   created() {
@@ -80,13 +90,13 @@ export default {
   },
   methods: {
     loadData() {
-      api.list().then(({data}) => {
+      api.list().then(({ data }) => {
         this.data = data.data.data
       })
     },
 
     handleDestroy(row, index) {
-      api.destroy(row.id).then(({data}) => {
+      api.destroy(row.id).then(({ data }) => {
         this.$report(data, 'destroy', () => {})
       })
     },
@@ -95,7 +105,7 @@ export default {
       const birth = form.birth
       if (typeof birth === 'object') {
         // date object
-        form.birth = birth.toISOString().slice(0,10)
+        form.birth = birth.toISOString().slice(0, 10)
       }
     },
 
@@ -103,7 +113,7 @@ export default {
       this.beforeSubmit(form)
 
       if (status === 0) {
-        api.create(form).then(({data}) => {
+        api.create(form).then(({ data }) => {
           this.$report(data, 'create', () => {
             let id = data.data.data.id
             switchEditable(false)
@@ -111,13 +121,13 @@ export default {
           })
         })
       } else {
-        api.update(form).then(({data}) => {
+        api.update(form).then(({ data }) => {
           this.$report(data, 'update', () => {
             switchEditable(false)
           })
         })
       }
-    }
-  }
+    },
+  },
 }
 </script>

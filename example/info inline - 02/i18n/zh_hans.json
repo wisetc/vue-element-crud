@@ -1,0 +1,14 @@
+{
+  "name": "姓名",
+  "phone": "手机号",
+  "mail": "邮箱",
+  "site": "网址",
+  "birth": "出生日",
+  "married": "已婚",
+  "Yes": "是",
+  "No": "否",
+  "age": "年龄",
+  "This item cannot be empty": "此项不能为空",
+  "Email address format is incorrect": "邮箱地址格式不正确",
+  "URL format is incorrect": "网址格式不正确"
+}
