@@ -5,14 +5,29 @@
         <el-button type="primary" @click="create" size="small" icon="el-icon-plus"></el-button>
       </slot>
     </div>
-    <el-table :data="injectedData" stripe border :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow"
-      @expand="handleExpand" @row-click="handleRowClick" @row-dblclick="handleRowDblclick">
+    <el-table
+      :data="injectedData"
+      stripe
+      border
+      :row-style="rowStyle || undefined"
+      :highlight-current-row="highlightCurrentRow"
+      @expand="handleExpand"
+      @row-click="handleRowClick"
+      @row-dblclick="handleRowDblclick"
+    >
       <slot name="expand"></slot>
-      
+
       <slot name="index"></slot>
       <slot name="prepend"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
-        <el-table-column :key="index" v-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
+        <el-table-column
+          :key="index"
+          v-if="key in fields && fields[key].options && !fields[key].raw"
+          :label="columns[key]"
+          :min-width="labelWidth"
+          show-overflow-tooltip
+        >
+          <!-- 如果表格中包含有选项的字段 -->
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
               <el-select
@@ -26,16 +41,24 @@
                 <el-option :key="index" v-for="(o, index) in fields[key].options" v-bind="o"></el-option>
               </el-select>
             </template>
-            <template v-else>
-              {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
-            </template>
+            <template
+              v-else
+            >{{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}</template>
           </template>
         </el-table-column>
-        <el-table-column :key="index" v-else :label="columns[key]" :min-width="labelWidth" :prop="key" show-overflow-tooltip>
+        <el-table-column
+          :key="index"
+          v-else
+          :label="columns[key]"
+          :min-width="labelWidth"
+          :prop="key"
+          show-overflow-tooltip
+        >
           <template slot-scope="scope">
             <template v-if="scope.row.__editable__">
               <template v-if="fields[key].editable || fields[key].editable === undefined">
-                <el-input v-if="fields[key].type === 'string' || fields[key].type === 'text'"
+                <el-input
+                  v-if="fields[key].type === 'string' || fields[key].type === 'text'"
                   v-bind="fields[key]"
                   v-model="scope.row.__form__[key]"
                   :placeholder="columns[key]"
@@ -43,8 +66,10 @@
                   class="crud__input"
                   :class="{ 'is-error': scope.row.__error__[key].isError }"
                   @change="clearErrors(scope.row, key)"
-                  @keydown.13.native="submit(scope.row)"></el-input>
-                <el-input v-else-if="fields[key].type === 'number'"
+                  @keydown.13.native="submit(scope.row)"
+                ></el-input>
+                <el-input
+                  v-else-if="fields[key].type === 'number'"
                   v-bind="fields[key]"
                   type="number"
                   v-model="scope.row.__form__[key]"
@@ -53,8 +78,10 @@
                   :class="{ 'is-error': scope.row.__error__[key].isError }"
                   @change="clearErrors(scope.row, key)"
                   @input.native="handleNumberInput(scope.row, key, fields[key].maxlength)"
-                  @keydown.13.native="submit(scope.row)"></el-input>
-                <el-date-picker v-else-if="fields[key].type === 'date' || fields[key].type === 'datetime'"
+                  @keydown.13.native="submit(scope.row)"
+                ></el-input>
+                <el-date-picker
+                  v-else-if="fields[key].type === 'date' || fields[key].type === 'datetime'"
                   v-bind="fields[key]"
                   :type="fields[key].type"
                   :placeholder="columns[key]"
@@ -75,39 +102,62 @@
                 </el-radio-group>
               </template>
               <template v-else>
-                <template v-if="fields[key].formatter">
-                  {{ fields[key].formatter(scope.row[key], scope.row) }}
-                </template>
+                <template
+                  v-if="fields[key].formatter"
+                >{{ fields[key].formatter(scope.row[key], scope.row) }}</template>
               </template>
-              
             </template>
             <template v-else>
-              <template v-if="fields[key].formatter && fields[key].editable !== false">
-                {{ fields[key].formatter(scope.row[key], scope.row) }}
-              </template>
-              <template v-else>
-                {{ scope.row[key] }}
-              </template>
+              <template
+                v-if="fields[key].formatter && fields[key].editable !== false"
+              >{{ fields[key].formatter(scope.row[key], scope.row) }}</template>
+              <template v-else>{{ scope.row[key] }}</template>
             </template>
           </template>
         </el-table-column>
       </template>
       <slot></slot>
 
-      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="150" align="center">
+      <el-table-column
+        v-if="actions.includes('update') || actions.includes('destroy')"
+        label="__('Actions')"
+        width="150"
+        align="center"
+      >
         <template slot-scope="scope">
           <template v-if="!scope.row.__editable__">
-            <el-button v-if="actions.includes('update')" type="warning" size="small" icon="el-icon-edit"
-              @click.stop="update(scope.row, scope.$index)"></el-button>
-            <el-button v-if="actions.includes('destroy')" type="danger" size="small" icon="el-icon-delete"
-              @click.stop="destroy(scope.row, scope.$index)"></el-button>
+            <el-button
+              v-if="actions.includes('update')"
+              type="warning"
+              size="small"
+              icon="el-icon-edit"
+              @click.stop="update(scope.row, scope.$index)"
+            ></el-button>
+            <el-button
+              v-if="actions.includes('destroy')"
+              type="danger"
+              size="small"
+              icon="el-icon-delete"
+              @click.stop="destroy(scope.row, scope.$index)"
+            ></el-button>
           </template>
           <template v-else>
-            <div :class="{ 'shake' : scope.row.__warning__ }" @animationend="scope.row.__warning__ = false">
-              <el-button type="success" size="small" icon="el-icon-check"
-                @click.stop="submit(scope.row)"></el-button>
-              <el-button type="danger" size="small" icon="el-icon-close"
-                @click.stop="cancelEdit(scope.row, scope.$index)"></el-button>
+            <div
+              :class="{ 'shake' : scope.row.__warning__ }"
+              @animationend="scope.row.__warning__ = false"
+            >
+              <el-button
+                type="success"
+                size="small"
+                icon="el-icon-check"
+                @click.stop="submit(scope.row)"
+              ></el-button>
+              <el-button
+                type="danger"
+                size="small"
+                icon="el-icon-close"
+                @click.stop="cancelEdit(scope.row, scope.$index)"
+              ></el-button>
             </div>
           </template>
         </template>
@@ -129,7 +179,7 @@ export default {
 
     // 表单验证
     rules: Object,
-    
+
     // 表格与表单的字段不一致时，传入作为表格的表头
     table: Object,
 
@@ -146,7 +196,7 @@ export default {
     highlightCurrentRow: { default: false, type: Boolean },
 
     // 表格行样式
-    rowStyle: Function
+    rowStyle: Function,
   },
   data() {
     return {
@@ -175,7 +225,10 @@ export default {
       let fields = this.fields
       for (let k in fields) {
         if (fields[k].rules) {
-          rules[k] = fields[k].rules.concat({ pattern: /^\S.*?$/, message: '不允许以空格开头' })
+          rules[k] = fields[k].rules.concat({
+            pattern: /^\S.*?$/,
+            message: __('Do not allow spaces to start'),
+          })
         }
       }
       return rules
@@ -186,11 +239,16 @@ export default {
         for (let k in item) {
           error[k] = {
             isError: false,
-            message: ''
+            message: '',
           }
         }
 
-        let rowInclude = { __form__: {...item}, __editable__: false, __error__: error, __warning__: false }
+        let rowInclude = {
+          __form__: { ...item },
+          __editable__: false,
+          __error__: error,
+          __warning__: false,
+        }
         return { ...item, ...rowInclude }
       })
     },
@@ -200,14 +258,14 @@ export default {
         model[k] = null
       }
       return model
-    }
+    },
   },
 
   methods: {
     clearErrors(row, key) {
       row.__error__[key] = {
         isError: false,
-        message: ''
+        message: '',
       }
     },
     handleNumberInput(row, key, maxlength) {
@@ -233,7 +291,7 @@ export default {
       for (let k in row) {
         __error__[k] = {
           isError: false,
-          message: ''
+          message: '',
         }
       }
       this.injectedData.push({
@@ -241,29 +299,38 @@ export default {
         __error__,
         __warning__: false,
         __editable__: true,
-        __form__: { ...this.model }
+        __form__: { ...this.model },
       })
     },
     update(row, index) {
       row.__editable__ = true
     },
     destroy(row, index) {
-      this.$confirm(`确定要删除？`, '确认', {type: 'warning'}).then(()=> {
-        this.remove(index)
-        this.$emit('destroy', row, index)
-      }).catch(_ => {})
+      this.$confirm(__('Are you sure you want to delete?'), __('Confirm'), {
+        type: 'warning',
+      })
+        .then(() => {
+          this.remove(index)
+          this.$emit('destroy', row, index)
+        })
+        .catch(_ => {})
     },
     cancelEdit(row, index) {
       if (row.id) {
         let _row = {}
         let error = {}
         for (let k in row) {
-          if (k !== '__form__' && k !== '__editable__' && k !== '__error__' && k !== '__warning__') {
+          if (
+            k !== '__form__' &&
+            k !== '__editable__' &&
+            k !== '__error__' &&
+            k !== '__warning__'
+          ) {
             _row[k] = row[k]
 
             error[k] = {
               isError: false,
-              message: ''
+              message: '',
             }
           }
         }
@@ -274,14 +341,14 @@ export default {
         this.injectedData.splice(index, 1)
       }
     },
-    validate(form, error){
+    validate(form, error) {
       return new Promise((resolve, reject) => {
         new schema(this.computedRules).validate(form, (errors, fields) => {
           if (fields) {
             for (let k in fields) {
               error[k] = {
                 isError: true,
-                message: fields[k][0].message
+                message: fields[k][0].message,
               }
             }
           }
@@ -293,19 +360,25 @@ export default {
     },
 
     submit(row, index) {
-      let status = row.id ? 1: 0
-      const switchEditable = (editable=false) => {
+      let status = row.id ? 1 : 0
+      const switchEditable = (editable = false) => {
         row.__editable__ = editable
       }
-      const updateRowId = (id=null) => {
+      const updateRowId = (id = null) => {
         row.id = id
         row.__form__.id = id
       }
 
-      this.validate(row.__form__, row.__error__).then((valid) => {
+      this.validate(row.__form__, row.__error__).then(valid => {
         if (valid) {
           this.commit(row)
-          this.$emit('submit', status, row.__form__, switchEditable, updateRowId)
+          this.$emit(
+            'submit',
+            status,
+            row.__form__,
+            switchEditable,
+            updateRowId
+          )
         }
       })
     },
@@ -313,7 +386,7 @@ export default {
       this.injectedData.splice(index, 1)
     },
     commit(row) {
-      for(let k in row.__form__) {
+      for (let k in row.__form__) {
         row[k] = row.__form__[k]
       }
     },
@@ -326,8 +399,8 @@ export default {
     },
     handleRowDblclick(row, event) {
       this.$emit('row-dblclick', row, event)
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -338,7 +411,8 @@ export default {
 .crud__select {
   width: 100%;
 }
-.crud__input.is-error .el-input__inner, .crud__select.is-error .el-input__inner {
+.crud__input.is-error .el-input__inner,
+.crud__select.is-error .el-input__inner {
   border-color: red !important;
 }
 .shake {
@@ -350,17 +424,25 @@ export default {
 }
 
 @keyframes shake {
-  from, to {
+  from,
+  to {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
   }
 
-  10%, 30%, 50%, 70%, 90% {
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     -webkit-transform: translate3d(-10px, 0, 0);
     transform: translate3d(-10px, 0, 0);
   }
 
-  20%, 40%, 60%, 80% {
+  20%,
+  40%,
+  60%,
+  80% {
     -webkit-transform: translate3d(10px, 0, 0);
     transform: translate3d(10px, 0, 0);
   }

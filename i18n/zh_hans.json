@@ -4,5 +4,10 @@
   "destroy": "删除",
   "handle": "操作",
   " succeed.": "成功。",
-  " failed. ": "失败。"
+  " failed. ": "失败。",
+
+  "Are you sure you want to delete?": "确定要删除？",
+  "Do not allow spaces to start": "不允许以空格开头",
+  "Confirm": "确认",
+  "Actions": "操作"
 }
