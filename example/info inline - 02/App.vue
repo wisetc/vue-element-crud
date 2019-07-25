@@ -73,6 +73,11 @@ export default {
           editable: false,
           formatter: function(value, row) {
             let birth = row.__form__.birth
+            if (birth === null) {
+              row.__form__.age = 0
+              return 0
+            }
+            
             let birthFullYear =
               typeof birth === 'string'
                 ? Number(birth.slice(0, 4))
