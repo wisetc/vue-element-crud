@@ -1,0 +1,8 @@
+{
+  "create": "新增",
+  "update": "修改",
+  "destroy": "删除",
+  "handle": "操作",
+  " succeed.": "成功。",
+  " failed. ": "失败。"
+}

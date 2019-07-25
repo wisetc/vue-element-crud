@@ -1,17 +1,17 @@
 import { Message } from 'element-ui'
 
-export default function report (data, type='', callback) {
+export default function report(data, type = '', callback) {
   let map = {
-    create: '新增',
-    update: '修改',
-    destroy: '删除'
+    create: __('create'),
+    update: __('update'),
+    destroy: __('destroy'),
   }
-  let msg = map[type] || type || '操作'
+  let msg = map[type] || type || __('handle')
 
   if (data.code === 1) {
-    Message.success(msg + '成功！')
+    Message.success(msg + __(' succeed.'))
     callback(data)
   } else {
-    Message.error(msg + '失败！' + data.msg)
+    Message.error(msg + __(' failed. ') + data.msg)
   }
 }

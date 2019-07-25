@@ -31,7 +31,9 @@
   },
   "homepage": "https://github.com/wisetc/vue-element-crud#readme",
   "dependencies": {
+    "copy-webpack-plugin": "^5.0.3",
     "element-ui": "^2.2.0",
+    "i18n-webpack-plugin": "^1.0.0",
     "vue": "2.6.10",
     "vue-class-component": "^7.1.0"
   },

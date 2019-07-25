@@ -1,105 +1,123 @@
-var path = require('path');
-var webpack = require('webpack');
-var vueLoaderPlugin = require('vue-loader/lib/plugin');
+var path = require('path')
+var webpack = require('webpack')
+var vueLoaderPlugin = require('vue-loader/lib/plugin')
+var I18nPlugin = require('i18n-webpack-plugin')
+var CopyPlugin = require('copy-webpack-plugin')
 
-module.exports = {
-  // entry: './example/info - 01/main.js',
-  entry: './example/info inline - 02/main.js',
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'build.js',
-  },
-  mode: 'development',
-  module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: 'vue-loader',
-        options: {
-          compilerOptions: {
-            whitespace: 'condense',
+var languages = {
+  en: null,
+  zh_hans: require('./i18n/zh_hans.json'),
+}
+
+module.exports = Object.keys(languages).map(function(language) {
+  return {
+    name: language,
+    mode: 'development',
+    entry: './example/info inline - 02/main.js',
+    output: {
+      path: path.join(__dirname, 'dist'),
+      filename: language === 'en' ? 'build.js' : language + '.build.js',
+    },
+    module: {
+      rules: [
+        {
+          test: /\.vue$/,
+          loader: 'vue-loader',
+          options: {
+            compilerOptions: {
+              whitespace: 'condense',
+            },
           },
         },
-      },
-      {
-        test: /\.css$/,
-        loader: 'style-loader!css-loader',
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.ts$/,
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true,
-          appendTsSuffixTo: ['\\.vue$'],
-          // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
-          happyPackMode: false,
+        {
+          test: /\.css$/,
+          loader: 'style-loader!css-loader',
         },
-      },
-      {
-        test: /\.tsx$/,
-        loader: 'ts-loader',
-        options: {
-          transpileOnly: true,
-          appendTsxSuffixTo: ['\\.vue$'],
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          exclude: /node_modules/,
         },
-        exclude: /node_modules/,
-      },
-      {
-        test: /\.(png|jpg|gif|svg|ttf|woff)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]?[hash]',
+        {
+          test: /\.ts$/,
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            appendTsSuffixTo: ['\\.vue$'],
+            // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
+            happyPackMode: false,
+          },
         },
-      },
-    ],
-  },
-  resolve: {
-    alias: {
-      vue$: 'vue/dist/vue.esm.js',
+        {
+          test: /\.tsx$/,
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            appendTsxSuffixTo: ['\\.vue$'],
+          },
+          exclude: /node_modules/,
+        },
+        {
+          test: /\.(png|jpg|gif|svg|ttf|woff)$/,
+          loader: 'file-loader',
+          options: {
+            name: '[name].[ext]?[hash]',
+          },
+        },
+      ],
     },
-  },
-  devServer: {
-    historyApiFallback: true,
-    noInfo: true,
-    overlay: true,
-  },
-  performance: {
-    hints: false,
-  },
-  optimization: {
-    minimize: true,
-  },
-  devtool: '#eval-source-map',
-  plugins: [new vueLoaderPlugin()],
-};
+    resolve: {
+      alias: {
+        vue$: 'vue/dist/vue.esm.js',
+      },
+    },
+    devServer: {
+      serveIndex: true,
+      contentBase: path.join(__dirname, 'dist'),
+      compress: true,
+      port: 8080,
+    },
+    performance: {
+      hints: false,
+    },
+    optimization: {
+      minimize: true,
+    },
+    devtool: '#eval-source-map',
+    plugins: [new I18nPlugin(languages[language]), new vueLoaderPlugin()],
+  }
+})
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports.entry = './src/index.js';
-  module.exports.output = {
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/',
-    filename: 'crud.common.js',
-    library: 'CRUD',
-    libraryTarget: 'umd',
-  };
-  module.exports.mode = 'production';
-  module.exports.externals = ['element-ui'];
-  module.exports.devtool = false;
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: '"production"',
-      },
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true,
-    }),
-  ]);
+  module.exports.forEach(mo => {
+    mo.entry = './src/index.js'
+    mo.output = {
+      path: path.resolve(__dirname, './dist'),
+      publicPath: '/dist/',
+      filename:
+        mo.name === 'en' ? 'crud.common.js' : mo.name + '.crud.common.js',
+      library: 'CRUD',
+      libraryTarget: 'umd',
+    }
+    mo.mode = 'production'
+    mo.externals = ['element-ui']
+    mo.devtool = false
+    // http://vue-loader.vuejs.org/en/workflow/production.html
+    mo.plugins = (mo.plugins || []).concat([
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: '"production"',
+        },
+      }),
+      new webpack.LoaderOptionsPlugin({
+        minimize: true,
+      }),
+      new CopyPlugin([
+        {
+          from: path.resolve(__dirname, 'public'),
+          to: path.resolve(__dirname, 'dist'),
+        },
+      ]),
+    ])
+  })
 }
