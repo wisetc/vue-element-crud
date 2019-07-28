@@ -13,10 +13,14 @@ module.exports = Object.keys(languages).map(function(language) {
   return {
     name: language,
     mode: 'development',
-    entry: './example/info inline - 02/main.js',
+    entry: './src/index.js',
     output: {
-      path: path.join(__dirname, 'dist'),
-      filename: language === 'en' ? 'build.js' : language + '.build.js',
+      path: path.resolve(__dirname, './dist'),
+      publicPath: '/dist/',
+      filename:
+        language === 'en' ? 'crud.common.js' : language + '.crud.common.js',
+      library: 'CRUD',
+      libraryTarget: 'umd',
     },
     module: {
       rules: [
@@ -90,15 +94,6 @@ module.exports = Object.keys(languages).map(function(language) {
 
 if (process.env.NODE_ENV === 'production') {
   module.exports.forEach(mo => {
-    mo.entry = './src/index.js'
-    mo.output = {
-      path: path.resolve(__dirname, './dist'),
-      publicPath: '/dist/',
-      filename:
-        mo.name === 'en' ? 'crud.common.js' : mo.name + '.crud.common.js',
-      library: 'CRUD',
-      libraryTarget: 'umd',
-    }
     mo.mode = 'production'
     mo.externals = ['element-ui']
     mo.devtool = false
