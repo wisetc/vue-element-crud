@@ -9,6 +9,7 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "dev:inline01": "cross-env NODE_ENV=development webpack-dev-server --config \"./example/info - 01/webpack.config.js\" --open --hot",
     "dev:inline02": "cross-env NODE_ENV=development webpack-dev-server --config \"./example/info inline - 02/webpack.config.js\" --open --hot",
     "demo:inline02": "cross-env NODE_ENV=production webpack --config \"./example/info inline - 02/webpack.config.js\"",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
