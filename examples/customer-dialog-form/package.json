@@ -1,0 +1,20 @@
+{
+  "license": "MIT",
+  "dependencies": {
+    "element-ui": "^2.11.1",
+    "vue": "2.6.10"
+  },
+  "scripts": {
+    "start": "cross-env NODE_ENV=development webpack-dev-server --open --hot"
+  },
+  "devDependencies": {
+    "babel-core": "6.26.3",
+    "babel-loader": "7.1.5",
+    "babel-preset-env": "1.7.0",
+    "babel-preset-stage-2": "6.24.1",
+    "cross-env": "^5.2.0",
+    "vue-loader": "^15.7.1",
+    "webpack": "^4.38.0",
+    "webpack-dev-server": "^3.7.2"
+  }
+}

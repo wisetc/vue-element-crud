@@ -8,7 +8,7 @@ import CRUD from '../../dist/crud.common'
 Vue.use(ElementUI)
 Vue.use(CRUD)
 
-new Vue({
+export default new Vue({
   el: '#app',
-  render: h => h(App)
+  render: h => h(App),
 })

@@ -95,7 +95,7 @@ module.exports = Object.keys(languages).map(function(language) {
 if (process.env.NODE_ENV === 'production') {
   module.exports.forEach(mo => {
     mo.mode = 'production'
-    mo.externals = ['element-ui']
+    mo.externals = ['element-ui', 'async-validator']
     mo.devtool = false
     // http://vue-loader.vuejs.org/en/workflow/production.html
     mo.plugins = (mo.plugins || []).concat([

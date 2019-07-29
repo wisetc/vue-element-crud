@@ -9,9 +9,9 @@
   },
   "scripts": {
     "dev": "npm run dev:inline01",
-    "dev:inline01": "cross-env NODE_ENV=development webpack-dev-server --config \"./example/info - 01/webpack.config.js\" --open --hot",
-    "dev:inline02": "cross-env NODE_ENV=development webpack-dev-server --config \"./example/info inline - 02/webpack.config.js\" --open --hot",
-    "demo:inline02": "cross-env NODE_ENV=production webpack --config \"./example/info inline - 02/webpack.config.js\"",
+    "dev:inline01": "cross-env NODE_ENV=development webpack-dev-server --config \"./examples/customer-dialog-form/webpack.config.js\" --open --hot",
+    "dev:inline02": "cross-env NODE_ENV=development webpack-dev-server --config \"./examples/customer-inline-form/webpack.config.js\" --open --hot",
+    "demo:inline02": "cross-env NODE_ENV=production webpack --config \"./example/customer-inline-form/webpack.config.js\"",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "build:watch": "cross-env NODE_ENV=production webpack --progress --hide-modules -w"
   },
@@ -34,17 +34,18 @@
   },
   "homepage": "https://github.com/wisetc/vue-element-crud#readme",
   "dependencies": {
-    "copy-webpack-plugin": "^5.0.3",
     "element-ui": "^2.2.0",
-    "i18n-webpack-plugin": "^1.0.0",
     "vue": "2.6.10",
     "vue-class-component": "^7.1.0"
   },
   "devDependencies": {
+    "vue-template-compiler": "2.6.10",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-preset-env": "^1.6.0",
     "babel-preset-stage-2": "^6.24.1",
+    "i18n-webpack-plugin": "^1.0.0",
+    "copy-webpack-plugin": "^5.0.3",
     "cross-env": "^5.0.5",
     "css-loader": "^0.28.7",
     "file-loader": "^1.1.4",
@@ -52,7 +53,6 @@
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3",
     "vue-loader": "^15.7.0",
-    "vue-template-compiler": "2.6.10",
     "webpack": ">=4 < 4.29",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.1.4"
