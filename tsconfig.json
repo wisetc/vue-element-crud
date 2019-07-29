@@ -1,9 +1,11 @@
 {
   "include": ["src/**/*"],
   "compilerOptions": {
-    "target": "es5",
+    "outDir": "./dist",
+    "target": "es2015",
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "allowJs": true
+    "allowJs": true,
+    "noImplicitThis": true
   }
 }
