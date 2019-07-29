@@ -8,10 +8,6 @@
     "example": "example"
   },
   "scripts": {
-    "dev": "npm run dev:inline01",
-    "dev:inline01": "cross-env NODE_ENV=development webpack-dev-server --config \"./examples/customer-dialog-form/webpack.config.js\" --open --hot",
-    "dev:inline02": "cross-env NODE_ENV=development webpack-dev-server --config \"./examples/customer-inline-form/webpack.config.js\" --open --hot",
-    "demo:inline02": "cross-env NODE_ENV=production webpack --config \"./example/customer-inline-form/webpack.config.js\"",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
     "build:watch": "cross-env NODE_ENV=production webpack --progress --hide-modules -w"
   },
