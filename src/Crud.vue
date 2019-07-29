@@ -3,56 +3,161 @@
     <div class="crud__ctrl" v-if="actions.includes('create')">
       <el-button type="primary" @click="create" size="small" icon="el-icon-plus">新增</el-button>
     </div>
-    <el-table :data="data" stripe :border="border || undefined" :row-style="rowStyle || undefined" :highlight-current-row="highlightCurrentRow" @expand="handleExpand" @row-click="handleRowClick"
-      @row-dblclick="handleRowDblclick">
+    <el-table
+      :data="data"
+      stripe
+      :border="border || undefined"
+      :row-style="rowStyle || undefined"
+      :highlight-current-row="highlightCurrentRow"
+      @expand="handleExpand"
+      @row-click="handleRowClick"
+      @row-dblclick="handleRowDblclick"
+    >
       <slot name="prepend"></slot>
       <template v-for="(key, index) in Object.keys(columns)">
-        <el-table-column :key="index" v-if="key in fields && fields[key].options
+        <el-table-column
+          :key="index"
+          v-if="key in fields && fields[key].options
           && fields[key].formatter && typeof fields[key].formatter === 'function'"
-          :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
-          <template slot-scope="scope">
-            {{ fields[key].formatter(scope.row, scope.column, scope.row[key]) }}
-          </template>
+          :label="columns[key]"
+          :min-width="fields[key].width || labelWidth"
+          show-overflow-tooltip
+        >
+          <!-- 如果表格中包含有选项的字段 -->
+          <template
+            slot-scope="scope"
+          >{{ fields[key].formatter(scope.row, scope.column, scope.row[key]) }}</template>
         </el-table-column>
-        <el-table-column :key="index" v-else-if="key in fields && fields[key].options && !fields[key].raw" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip> <!-- 如果表格中包含有选项的字段 -->
-          <template slot-scope="scope">
-            {{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}
-          </template>
+        <el-table-column
+          :key="index"
+          v-else-if="key in fields && fields[key].options && !fields[key].raw"
+          :label="columns[key]"
+          :min-width="fields[key].width || labelWidth"
+          show-overflow-tooltip
+        >
+          <!-- 如果表格中包含有选项的字段 -->
+          <template
+            slot-scope="scope"
+          >{{ (fields[key].options.find(item => item.value === scope.row[key]) || '').label }}</template>
         </el-table-column>
-        <el-table-column :key="index" v-else-if="key in fields && fields[key].type === TYPES.date" :label="columns[key]" :min-width="fields[key].width || labelWidth" show-overflow-tooltip>
-          <template slot-scope="scope">
-            {{ scope.row[key] ? scope.row[key].slice(0, 10) : '' }}
-          </template>
+        <el-table-column
+          :key="index"
+          v-else-if="key in fields && fields[key].type === TYPES.date"
+          :label="columns[key]"
+          :min-width="fields[key].width || labelWidth"
+          show-overflow-tooltip
+        >
+          <template slot-scope="scope">{{ scope.row[key] ? scope.row[key].slice(0, 10) : '' }}</template>
         </el-table-column>
-        <el-table-column :key="index" v-else :label="columns[key]" :min-width="fields[key] ? fields[key].width : labelWidth" :prop="key" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          :key="index"
+          v-else
+          :label="columns[key]"
+          :min-width="fields[key] ? fields[key].width : labelWidth"
+          :prop="key"
+          show-overflow-tooltip
+        ></el-table-column>
       </template>
       <slot></slot>
 
-      <el-table-column v-if="actions.includes('update') || actions.includes('destroy')" label="操作" width="148" align="center">
+      <el-table-column
+        v-if="actions.includes('update') || actions.includes('destroy')"
+        label="操作"
+        width="148"
+        align="center"
+      >
         <template slot-scope="scope">
-          <el-button v-if="actions.includes('update')" type="warning" size="small" @click.stop="update(scope.row, scope.$index)">修改</el-button>
-          <el-button v-if="actions.includes('destroy')" type="danger" size="small" @click.stop="destroy(scope.row, scope.$index)">删除</el-button>
+          <el-button
+            v-if="actions.includes('update')"
+            type="warning"
+            size="small"
+            @click.stop="update(scope.row, scope.$index)"
+          >修改</el-button>
+          <el-button
+            v-if="actions.includes('destroy')"
+            type="danger"
+            size="small"
+            @click.stop="destroy(scope.row, scope.$index)"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog :title="dialog.title[dialog.status]" :size="dialog.size" :close-on-click-modal="false"
-      :visible="dialog.visible" :show-close="false" @open="handleOpen">
-      <el-form class="crud__form" :class="{'crud__form--inline': inline}" ref="form" :model="form" :rules="computedRules" @keyup.native.13="submit">
-        <el-form-item v-for="(key, index) in Object.keys(labels)" :key="index" :label="labels[key]" :prop="key" :label-width="labelWidth">
+    <el-dialog
+      :title="dialog.title[dialog.status]"
+      :size="dialog.size"
+      :close-on-click-modal="false"
+      :visible="dialog.visible"
+      :show-close="false"
+      @open="handleOpen"
+    >
+      <el-form
+        class="crud__form"
+        :class="{'crud__form--inline': inline}"
+        ref="form"
+        :model="form"
+        :rules="computedRules"
+        @keyup.native.13="submit"
+      >
+        <el-form-item
+          v-for="(key, index) in Object.keys(labels)"
+          :key="index"
+          :label="labels[key]"
+          :prop="key"
+          :label-width="labelWidth"
+        >
           <slot v-if="fields[key].slot" :name="fields[key].slot"></slot>
 
-          <el-select :disabled="fields[key].disabled" v-else-if="fields[key].options" v-model="form[key]" style="width: 100%;" filterable>
-            <el-option v-for="(o, index) in fields[key].options" :key="index" :label="o.label" :value="o.value"
-              :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"/>
+          <el-select
+            :disabled="fields[key].disabled"
+            v-else-if="fields[key].options"
+            v-model="form[key]"
+            style="width: 100%;"
+            filterable
+          >
+            <el-option
+              v-for="(o, index) in fields[key].options"
+              :key="index"
+              :label="o.label"
+              :value="o.value"
+              :disabled="fields[key].unique && repeated(key, o.value, (updatingRow || '')[key])"
+            />
           </el-select>
-          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.date" type="date" v-model="form[key]"></el-date-picker>
-          <el-date-picker :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.datetime" type="datetime" v-model="form[key]"></el-date-picker>
-          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.text"
-            type="textarea" resize="none" @keyup.13.native.stop="doNothing"
-            v-model="form[key]" :maxlength="fields[key].length"></el-input>
-          <el-input :disabled="fields[key].disabled" v-else-if="fields[key].type === TYPES.integer || fields[key].type === TYPES.float" type="number" v-model.number="form[key]" @change="handleNumberChange(key, $event, fields[key].length)"/>
-          <el-input :disabled="fields[key].disabled" :type="fields[key].protected ? 'password' : 'text'" v-else v-model="form[key]" :maxlength="fields[key].length"/>
+          <el-date-picker
+            :disabled="fields[key].disabled"
+            v-else-if="fields[key].type === TYPES.date"
+            type="date"
+            v-model="form[key]"
+          ></el-date-picker>
+          <el-date-picker
+            :disabled="fields[key].disabled"
+            v-else-if="fields[key].type === TYPES.datetime"
+            type="datetime"
+            v-model="form[key]"
+          ></el-date-picker>
+          <el-input
+            :disabled="fields[key].disabled"
+            v-else-if="fields[key].type === TYPES.text"
+            type="textarea"
+            resize="none"
+            @keyup.13.native.stop="doNothing"
+            v-model="form[key]"
+            :maxlength="fields[key].length"
+          ></el-input>
+          <el-input
+            :disabled="fields[key].disabled"
+            v-else-if="fields[key].type === TYPES.integer || fields[key].type === TYPES.float"
+            type="number"
+            v-model.number="form[key]"
+            @change="handleNumberChange(key, $event, fields[key].length)"
+          />
+          <el-input
+            :disabled="fields[key].disabled"
+            :type="fields[key].protected ? 'password' : 'text'"
+            v-else
+            v-model="form[key]"
+            :maxlength="fields[key].length"
+          />
         </el-form-item>
         <slot name="addon"></slot>
       </el-form>
@@ -66,6 +171,27 @@
 
 <script>
 import TYPES from './fieldType'
+
+/** @enum {number} */
+const DialogStatus = {
+  CREATE: 0,
+  UPDATE: 1,
+}
+
+/** @enum {string} */
+const DialogSize = {
+  SMALL: 'small',
+  NORMAL: 'normal',
+  LARGE: 'large',
+}
+
+/** @typedef Dialog
+ * @property {DialogStatus} status
+ * @property {boolean} visible
+ * @property {object} title
+ * @property {DialogSize} size
+ */
+
 export default {
   props: {
     // 表格数据
@@ -79,7 +205,7 @@ export default {
 
     // 表单验证
     rules: Object,
-    
+
     // 表格与表单的字段不一致时，传入作为表格的表头
     table: Object,
 
@@ -105,24 +231,25 @@ export default {
     rowStyle: Function,
 
     // 表格单元格是否带边框
-    border: { type: Boolean, default: true }
+    border: { type: Boolean, default: true },
   },
   data() {
     return {
+      /** @type {Dialog} */
       dialog: {
         status: 0,
         visible: false,
         title: {
           0: '新增',
-          1: '修改'
+          1: '修改',
         },
-        size: this.inline ? this.size : 'small'
+        size: this.inline ? this.size : DialogSize.SMALL,
       },
 
       // 选项不可重复时，传入当前行判断选项是否为此当前行的属性
       updatingRow: null,
 
-      TYPES
+      TYPES,
     }
   },
   computed: {
@@ -144,30 +271,35 @@ export default {
       let fields = this.fields
       for (let k in fields) {
         if (fields[k].rules) {
-          rules[k] = fields[k].rules.concat({ pattern: /^\S.*?$/, message: '不允许以空格开头' })
+          rules[k] = fields[k].rules.concat({
+            pattern: /^\S.*?$/,
+            message: '不允许以空格开头',
+          })
         }
       }
       return rules
-    }
+    },
   },
 
   methods: {
     doNothing() {},
     create() {
-      this.dialog.status = 0
+      this.dialog.status = DialogStatus.CREATE
       this.showDialog()
       this.$emit('create')
     },
     update(row, index) {
-      this.dialog.status = 1
+      this.dialog.status = DialogStatus.UPDATE
       this.updatingRow = row
       this.showDialog()
       this.$emit('update', row, index)
     },
     destroy(row, index) {
-      this.$confirm(`确定要删除？`, '确认', {type: 'warning'}).then(()=> {
-        this.$emit('destroy', row, index)
-      }).catch(_ => {})
+      this.$confirm(`确定要删除？`, '确认', { type: 'warning' })
+        .then(() => {
+          this.$emit('destroy', row, index)
+        })
+        .catch(_ => {})
     },
     showDialog() {
       this.dialog.visible = true
@@ -208,8 +340,8 @@ export default {
       this.$nextTick(() => {
         this.form[key] = slicedText
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
