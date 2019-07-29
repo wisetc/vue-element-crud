@@ -1,3 +1,4 @@
+/** @type {string[]} */
 const fieldTypes = [
   'string',
   'text',
@@ -7,6 +8,7 @@ const fieldTypes = [
   'date',
   'datetime',
   'objectid',
-];
+]
 
-export default fieldTypes.reduce((x, y) => ({ ...x, [y]: y }), {});
+/** @enum {string} */
+export default fieldTypes.reduce((x, y) => ({ ...x, [y]: y }), {})
