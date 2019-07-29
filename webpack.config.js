@@ -43,25 +43,6 @@ module.exports = Object.keys(languages).map(function(language) {
           exclude: /node_modules/,
         },
         {
-          test: /\.ts$/,
-          loader: 'ts-loader',
-          options: {
-            transpileOnly: true,
-            appendTsSuffixTo: ['\\.vue$'],
-            // https://github.com/TypeStrong/ts-loader#happypackmode-boolean-defaultfalse
-            happyPackMode: false,
-          },
-        },
-        {
-          test: /\.tsx$/,
-          loader: 'ts-loader',
-          options: {
-            transpileOnly: true,
-            appendTsxSuffixTo: ['\\.vue$'],
-          },
-          exclude: /node_modules/,
-        },
-        {
           test: /\.(png|jpg|gif|svg|ttf|woff)$/,
           loader: 'file-loader',
           options: {
