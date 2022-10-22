@@ -1,3 +1,7 @@
+Unfortunately, this repository is not maintained anymore, use it at your own risk.
+
+说明：这个项目在组件的实现上可能有一些问题，且时过境迁，Vue 框架及 element UI 库的版本可能也发生了更新，不一定适合于当下以及将来。
+
 # vue-element-crud
 
 > A wrapped vue CRUD component based on the famous vue UI componets -- element-ui. 
